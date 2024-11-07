@@ -3,7 +3,6 @@ variable "virtual_hubs" {
     name                     = string
     location                 = string
     address_prefix           = string
-    extended_vnet            = bool
     firewall_sku_tier        = string
     firewall_public_ip_count = number
   })
