@@ -29,6 +29,7 @@ resource "azurerm_firewall" "this" {
   location            = var.virtual_hubs.location
   sku_name            = "AZFW_Hub"
   sku_tier            = var.virtual_hubs.firewall_sku_tier
+  firewall_policy_id = azurerm_firewall_policy.this.id
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
     public_ip_count = var.virtual_hubs.firewall_public_ip_count
