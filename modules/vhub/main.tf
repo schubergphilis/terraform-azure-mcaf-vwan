@@ -40,5 +40,9 @@ resource "azurerm_firewall_policy" "this" {
   resource_group_name = var.resource_group_name
   location            = var.virtual_hubs.location
   sku                 = var.virtual_hubs.firewall_sku_tier
+  dns {
+    proxy_enabled = var.virtual_hubs.firewall_proxy_enabled
+    servers       = var.virtual_hubs.firewall_dns_servers
+  }
 }
 
