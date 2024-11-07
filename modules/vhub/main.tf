@@ -29,7 +29,7 @@ resource "azurerm_firewall" "this" {
   location            = var.virtual_hubs.location
   sku_name            = "AZFW_Hub"
   sku_tier            = var.virtual_hubs.firewall_sku_tier
-  firewall_policy_id = azurerm_firewall_policy.this.id
+  firewall_policy_id  = azurerm_firewall_policy.this.id
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
     public_ip_count = var.virtual_hubs.firewall_public_ip_count
@@ -41,6 +41,7 @@ resource "azurerm_firewall_policy" "this" {
   resource_group_name = var.resource_group_name
   location            = var.virtual_hubs.location
   sku                 = var.virtual_hubs.firewall_sku_tier
+  threat_intelligence_mode = var.virtual_hubs.firewall_threat_intelligence_mode
   dns {
     proxy_enabled = var.virtual_hubs.firewall_proxy_enabled
     servers       = var.virtual_hubs.firewall_dns_servers
