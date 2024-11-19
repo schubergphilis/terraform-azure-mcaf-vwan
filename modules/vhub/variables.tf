@@ -1,8 +1,10 @@
 variable "virtual_hubs" {
   type = object({
-    name                     = string
+    virtual_hub_name                  = string
     location                 = string
     address_prefix           = string
+    routing_intent_name      = string
+    firewall_name            = string
     firewall_sku_tier        = string
     firewall_public_ip_count = number
     firewall_threat_intelligence_mode = string

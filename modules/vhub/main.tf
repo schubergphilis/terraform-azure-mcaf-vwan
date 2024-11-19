@@ -1,6 +1,6 @@
 
 resource "azurerm_virtual_hub" "this" {
-  name                = var.virtual_hubs.name
+  name                = var.virtual_hubs.virtual_hub_name
   resource_group_name = var.resource_group_name
   location            = var.virtual_hubs.location
   address_prefix      = var.virtual_hubs.address_prefix
@@ -8,7 +8,7 @@ resource "azurerm_virtual_hub" "this" {
 }
 
 resource "azurerm_virtual_hub_routing_intent" "this" {
-  name           = "${var.virtual_hubs.name}-routing-intent"
+  name           = var.virtual_hubs.routing_intent_name
   virtual_hub_id = azurerm_virtual_hub.this.id
 
   routing_policy {
@@ -24,7 +24,7 @@ resource "azurerm_virtual_hub_routing_intent" "this" {
 }
 
 resource "azurerm_firewall" "this" {
-  name                = "${var.virtual_hubs.name}-firewall"
+  name                = var.virtual_hubs.firewall_name
   resource_group_name = var.resource_group_name
   location            = var.virtual_hubs.location
   sku_name            = "AZFW_Hub"
@@ -37,7 +37,7 @@ resource "azurerm_firewall" "this" {
 }
 
 resource "azurerm_firewall_policy" "this" {
-  name                = "${var.virtual_hubs.name}-firewall-policy"
+  name                = var.virtual_hubs.firewall_policy_name
   resource_group_name = var.resource_group_name
   location            = var.virtual_hubs.location
   sku                 = var.virtual_hubs.firewall_sku_tier
