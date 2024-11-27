@@ -1,3 +1,5 @@
+# This Terraform configuration defines resources and a module for deploying an Azure Virtual WAN setup.
+
 resource "azurerm_resource_group" "this" {
   name     = var.resource_group.name
   location = var.resource_group.location
