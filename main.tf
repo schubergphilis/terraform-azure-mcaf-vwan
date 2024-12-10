@@ -17,7 +17,7 @@ resource "azurerm_virtual_wan" "this" {
   tags = merge(
     try(var.tags),
     tomap({
-      "Resource Type" = "Resource Group"
+      "Resource Type" = "Virtual WAN"
     })
   )
 }
@@ -31,7 +31,6 @@ module "vhub" {
   tags = merge(
     try(var.tags),
     tomap({
-      "Resource Type" = "Resource Group"
     })
   )
 }
