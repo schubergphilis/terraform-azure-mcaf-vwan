@@ -58,11 +58,11 @@ variable "virtual_hubs" {
 }
 
 variable "hub_bgp_peers" {
-  type = object({
+  type = map(object({
     virtual_hub_id = string
     name           = string
     peer_asn       = number
     peer_ip        = string
     vnet_id        = string
-  })
+  }))
 }
