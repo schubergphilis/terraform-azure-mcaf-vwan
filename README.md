@@ -25,12 +25,14 @@
 | Name | Type |
 |------|------|
 | [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_virtual_hub_bgp_connection.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_hub_bgp_connection) | resource |
 | [azurerm_virtual_wan.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_wan) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_hub_bgp_peers"></a> [hub\_bgp\_peers](#input\_hub\_bgp\_peers) | n/a | <pre>map(object({<br>    virtual_hub_id     = string<br>    name               = string<br>    peer_asn           = number<br>    peer_ip            = string<br>    vnet_connection_id = string<br>  }))</pre> | n/a | yes |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | n/a | <pre>object({<br>    name     = string<br>    location = string<br>  })</pre> | n/a | yes |
 | <a name="input_virtual_hubs"></a> [virtual\_hubs](#input\_virtual\_hubs) | n/a | <pre>map(object({<br>    virtual_hub_name                  = string<br>    location                          = string<br>    address_prefix                    = string<br>    routing_intent_name               = string<br>    firewall_name                     = string<br>    firewall_policy_name              = string<br>    firewall_sku_tier                 = string<br>    firewall_public_ip_count          = number<br>    firewall_threat_intelligence_mode = string<br>    firewall_proxy_enabled            = bool<br>    firewall_dns_servers              = list(string)<br>  }))</pre> | n/a | yes |
 | <a name="input_virtual_wan"></a> [virtual\_wan](#input\_virtual\_wan) | n/a | <pre>object({<br>    name     = string<br>    location = string<br>  })</pre> | n/a | yes |

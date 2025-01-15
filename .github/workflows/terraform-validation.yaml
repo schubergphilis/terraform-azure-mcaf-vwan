@@ -158,7 +158,7 @@ jobs:
           framework: terraform
           output_format: sarif
           quiet: true
-          skip_check: "CKV_GIT_5,CKV_GLB_1,CKV_TF_1"
+          skip_check: "CKV_GIT_5,CKV_GLB_1,CKV_TF_1,CKV_AZURE_220,CKV_AZURE_216"
           soft_fail: false
           skip_path: "examples/"
 

@@ -22,6 +22,14 @@
 # This variable defines the name of the resource group.
 # - type: string.
 
+# variable "hub_bgp_peers"
+# This variable defines the configuration for BGP peers.
+# - virtual_hub_id: The ID of the virtual hub (string).
+# - name: The name of the BGP peer (string).
+# - peer_asn: The ASN of the BGP peer (number).
+# - peer_ip: The IP address of the BGP peer (string).
+# - vnet_connection_id: The ID of the VNET Hub connection (string).
+
 variable "tags" {
   type    = map(string)
   default = {}
@@ -54,5 +62,15 @@ variable "virtual_hubs" {
     firewall_threat_intelligence_mode = string
     firewall_proxy_enabled            = bool
     firewall_dns_servers              = list(string)
+  }))
+}
+
+variable "hub_bgp_peers" {
+  type = map(object({
+    virtual_hub_id     = string
+    name               = string
+    peer_asn           = number
+    peer_ip            = string
+    vnet_connection_id = string
   }))
 }
