@@ -8,10 +8,6 @@ terraform {
     }
   }
 }
-# This Terraform configuration defines resources and a module for deploying an Azure Virtual WAN setup.
-
-# This Terraform configuration defines resources and a module for deploying an Azure Virtual WAN setup.
-
 resource "azurerm_resource_group" "this" {
   name     = "example-resource-group"
   location = "eastus"
