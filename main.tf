@@ -34,3 +34,13 @@ module "vhub" {
     })
   )
 }
+
+resource "azurerm_virtual_hub_bgp_connection" "this" {
+
+  for_each = var.hub_bgp_peers != null ? var.hub_bgp_peers : {}
+  virtual_hub_id                = var.hub_bgp_peers.virtual_hub_id
+  name                          = var.hub_bgp_peers.name[each.key]
+  peer_asn                      = var.hub_bgp_peers.peer_asn[each.key]
+  peer_ip                       = var.hub_bgp_peers.peer_ip[each.key]
+  virtual_network_connection_id = var.hub_bgp_peers.vnet_id[each.key]
+}

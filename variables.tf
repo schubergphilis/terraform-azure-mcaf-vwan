@@ -56,3 +56,13 @@ variable "virtual_hubs" {
     firewall_dns_servers              = list(string)
   }))
 }
+
+variable "hub_bgp_peers" {
+  type = object({
+    virtual_hub_id = string
+    name           = string
+    peer_asn       = number
+    peer_ip        = string
+    vnet_id        = string
+  })
+}
