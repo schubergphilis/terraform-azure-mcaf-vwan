@@ -41,5 +41,5 @@ resource "azurerm_virtual_hub_bgp_connection" "this" {
   name                          = each.value.name
   peer_asn                      = each.value.peer_asn
   peer_ip                       = each.value.peer_ip
-  virtual_network_connection_id = each.value.vnet_id
+  virtual_network_connection_id = each.value.vnet_connection_id
 }
