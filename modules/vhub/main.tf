@@ -20,24 +20,6 @@ resource "azurerm_virtual_hub" "this" {
   )
 }
 
-
-
-resource "azurerm_virtual_hub_routing_intent" "this" {
-  name           = var.virtual_hubs.routing_intent_name
-  virtual_hub_id = azurerm_virtual_hub.this.id
-
-  routing_policy {
-    name         = "_policy_PublicTraffic"
-    destinations = ["Internet"]
-    next_hop     = azurerm_firewall.this.id
-  }
-  routing_policy {
-    name         = "_policy_PrivateTraffic"
-    destinations = ["PrivateTraffic"]
-    next_hop     = azurerm_firewall.this.id
-  }
-}
-
 resource "azurerm_firewall" "this" {
   name                = var.virtual_hubs.firewall_name
   resource_group_name = var.resource_group_name
@@ -74,4 +56,22 @@ resource "azurerm_firewall_policy" "this" {
     })
   )
 }
+
+resource "azurerm_virtual_hub_routing_intent" "this" {
+  name           = var.virtual_hubs.routing_intent_name
+  virtual_hub_id = azurerm_virtual_hub.this.id
+
+  routing_policy {
+    name         = "_policy_PublicTraffic"
+    destinations = ["Internet"]
+    next_hop     = azurerm_firewall.this.id
+  }
+  routing_policy {
+    name         = "_policy_PrivateTraffic"
+    destinations = ["PrivateTraffic"]
+    next_hop     = azurerm_firewall.this.id
+  }
+  depends_on = [azurerm_firewall.this, azurerm_firewall_policy.this]
+}
+
 
