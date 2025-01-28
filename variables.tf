@@ -73,4 +73,5 @@ variable "hub_bgp_peers" {
     peer_ip            = string
     vnet_connection_id = string
   }))
+  default = {}
 }
