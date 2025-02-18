@@ -12,10 +12,11 @@ resource "azurerm_virtual_hub" "this" {
   location            = var.virtual_hubs.location
   address_prefix      = var.virtual_hubs.address_prefix
   virtual_wan_id      = var.virtual_wan_id
+
   tags = merge(
     try(var.tags),
     tomap({
-      "Resource Type" = "Resource Group"
+      "Resource Type" = "Virtual Hub"
     })
   )
 }
@@ -28,10 +29,12 @@ resource "azurerm_firewall" "this" {
   sku_tier            = var.virtual_hubs.firewall_sku_tier
   firewall_policy_id  = azurerm_firewall_policy.this.id
   zones               = var.virtual_hubs.firewall_zones
+
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
     public_ip_count = var.virtual_hubs.firewall_public_ip_count
   }
+
   tags = merge(
     try(var.tags),
     tomap({
@@ -46,10 +49,12 @@ resource "azurerm_firewall_policy" "this" {
   location                 = var.virtual_hubs.location
   sku                      = var.virtual_hubs.firewall_sku_tier
   threat_intelligence_mode = var.virtual_hubs.firewall_threat_intelligence_mode
+
   dns {
     proxy_enabled = var.virtual_hubs.firewall_proxy_enabled
     servers       = var.virtual_hubs.firewall_dns_servers
   }
+
   tags = merge(
     try(var.tags),
     tomap({
@@ -74,5 +79,3 @@ resource "azurerm_virtual_hub_routing_intent" "this" {
   }
   depends_on = [azurerm_firewall.this, azurerm_firewall_policy.this]
 }
-
-

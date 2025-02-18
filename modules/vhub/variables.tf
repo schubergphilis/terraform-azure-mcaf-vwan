@@ -25,9 +25,9 @@
 # This variable defines the name of the resource group.
 # - type: string.
 
-variable "tags" {
-  type    = map(string)
-  default = {}
+variable "resource_group_name" {
+  type = string
+  description = "The name of the resource group where the VWAN will be created"
 }
 
 variable "virtual_hubs" {
@@ -49,8 +49,11 @@ variable "virtual_hubs" {
 
 variable "virtual_wan_id" {
   type = string
+  description = "The ID of the virtual WAN."
 }
 
-variable "resource_group_name" {
-  type = string
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "A map of tags to assign to the resource."
 }
