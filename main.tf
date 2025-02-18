@@ -1,10 +1,10 @@
 resource "azurerm_virtual_wan" "this" {
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  name                = var.virtual_wan.name
-  type                =  var.virtual_wan.type
-  disable_vpn_encryption = var.virtual_wan.disable_vpn_encryption
-  allow_branch_to_branch_traffic = var.virtual_wan.allow_branch_to_branch_traffic
+  resource_group_name               = var.resource_group_name
+  location                          = var.location
+  name                              = var.virtual_wan.name
+  type                              = var.virtual_wan.type
+  disable_vpn_encryption            = var.virtual_wan.disable_vpn_encryption
+  allow_branch_to_branch_traffic    = var.virtual_wan.allow_branch_to_branch_traffic
   office365_local_breakout_category = var.virtual_wan.office365_local_breakout_category
 
   tags = merge(
@@ -16,9 +16,9 @@ resource "azurerm_virtual_wan" "this" {
 }
 
 module "vhub" {
-  for_each            = var.virtual_hubs
+  for_each = var.virtual_hubs
 
-  source              = "./modules/vhub"
+  source = "./modules/vhub"
 
   virtual_hubs        = var.virtual_hubs[each.key]
   virtual_wan_id      = azurerm_virtual_wan.this.id
@@ -28,7 +28,7 @@ module "vhub" {
 }
 
 resource "azurerm_virtual_hub_bgp_connection" "this" {
-  for_each                      = var.hub_bgp_peers
+  for_each = var.hub_bgp_peers
 
   virtual_hub_id                = each.value.virtual_hub_id
   name                          = each.value.name

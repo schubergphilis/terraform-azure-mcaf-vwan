@@ -26,7 +26,7 @@
 # - type: string.
 
 variable "resource_group_name" {
-  type = string
+  type        = string
   description = "The name of the resource group where the VWAN will be created"
 }
 
@@ -48,7 +48,7 @@ variable "virtual_hubs" {
 }
 
 variable "virtual_wan_id" {
-  type = string
+  type        = string
   description = "The ID of the virtual WAN."
 }
 

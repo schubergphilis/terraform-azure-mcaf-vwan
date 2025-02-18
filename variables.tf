@@ -42,10 +42,10 @@ variable "location" {
 
 variable "virtual_wan" {
   type = object({
-    name = string
-    type = optional(string, "Standard")
-    disable_vpn_encryption = optional(bool, false)
-    allow_branch_to_branch_traffic = optional(bool, true)
+    name                              = string
+    type                              = optional(string, "Standard")
+    disable_vpn_encryption            = optional(bool, false)
+    allow_branch_to_branch_traffic    = optional(bool, true)
     office365_local_breakout_category = optional(string, "None")
   })
   description = <<DESCRIPTION
@@ -73,7 +73,7 @@ variable "virtual_hubs" {
     firewall_proxy_enabled            = optional(bool, true)
     firewall_dns_servers              = list(string)
   }))
-  default = {}
+  default     = {}
   description = <<DESCRIPTION
 This variable defines the configuration for virtual hubs.
 - virtual_hub_name: The name of the virtual hub (string).
@@ -98,7 +98,7 @@ variable "hub_bgp_peers" {
     peer_ip            = string
     vnet_connection_id = string
   }))
-  default = {}
+  default     = {}
   description = <<DESCRIPTION
 This variable defines the configuration for BGP peers.
 - virtual_hub_id: The ID of the virtual hub (string).
