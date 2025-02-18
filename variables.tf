@@ -62,7 +62,7 @@ variable "virtual_hubs" {
   type = map(object({
     virtual_hub_name                  = string
     address_prefix                    = string
-    location                          = optional(string, null)
+    location                          = string
     routing_intent_name               = string
     firewall_name                     = string
     firewall_zones                    = optional(set(string), ["1", "2", "3"])
