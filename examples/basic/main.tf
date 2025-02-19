@@ -29,6 +29,7 @@ resource "azurerm_virtual_wan" "this" {
 
 module "vhub" {
   source = "../../modules/vhub"
+
   for_each = {
     hub1 = {
       virtual_hub_name                  = "example-virtual-hub"

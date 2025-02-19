@@ -4,21 +4,20 @@ variable "resource_group_name" {
 }
 
 variable "virtual_hubs" {
-  type = map(object({
+  type = object({
     virtual_hub_name                  = string
-    address_prefix                    = string
     location                          = string
+    address_prefix                    = string
     routing_intent_name               = string
     firewall_name                     = string
-    firewall_zones                    = optional(set(string), ["1", "2", "3"])
+    firewall_zones                    = set(string)
     firewall_policy_name              = string
     firewall_sku_tier                 = string
     firewall_public_ip_count          = number
     firewall_threat_intelligence_mode = string
-    firewall_dns_proxy_enabled        = optional(bool, true)
+    firewall_dns_proxy_enabled        = bool
     firewall_dns_servers              = list(string)
-  }))
-  default     = {}
+  })
   description = <<DESCRIPTION
 This variable defines the configuration for virtual hubs.
 - virtual_hub_name: The name of the virtual hub (string).
