@@ -36,6 +36,7 @@ module "vhub" {
       address_prefix                    = "10.0.0.0/16"
       routing_intent_name               = "example-routing-intent"
       firewall_name                     = "example-firewall"
+      firewall_zones                    = ["1", "2", "3"]
       firewall_policy_name              = "example-firewall-policy"
       firewall_sku_tier                 = "Standard"
       firewall_public_ip_count          = 1
