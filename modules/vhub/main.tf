@@ -51,7 +51,7 @@ resource "azurerm_firewall_policy" "this" {
   threat_intelligence_mode = var.virtual_hubs.firewall_threat_intelligence_mode
 
   dns {
-    proxy_enabled = var.virtual_hubs.firewall_proxy_enabled
+    proxy_enabled = var.virtual_hubs.firewall_dns_proxy_enabled
     servers       = var.virtual_hubs.firewall_dns_servers
   }
 
