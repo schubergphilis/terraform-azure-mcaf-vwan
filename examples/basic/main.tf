@@ -41,7 +41,7 @@ module "vhub" {
       firewall_sku_tier                 = "Standard"
       firewall_public_ip_count          = 1
       firewall_threat_intelligence_mode = "Alert"
-      firewall_proxy_enabled            = true
+      firewall_dns_proxy_enabled        = true
       firewall_dns_servers              = ["8.8.8.8", "8.8.4.4"]
       hub_bgp_peers = {
         peer1 = {
