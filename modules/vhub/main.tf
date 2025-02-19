@@ -30,9 +30,17 @@ resource "azurerm_firewall" "this" {
   firewall_policy_id  = azurerm_firewall_policy.this.id
   zones               = var.virtual_hubs.firewall_zones
 
+  dynamic "ip_configuration" {
+    for_each = var.virtual_hubs.firewall_public_ip_id != null ? [var.virtual_hubs.firewall_public_ip_id] : []
+    content {
+      name                 = var.virtual_hubs.firewall_public_ip_name == null ? "${var.virtual_hubs.firewall_name}-pip" : var.virtual_hubs.firewall_public_ip_name
+      public_ip_address_id = ip_configuration.value
+    }
+  }
+
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
-    public_ip_count = var.virtual_hubs.firewall_public_ip_count
+    public_ip_count = var.virtual_hubs.firewall_public_ip_id == null ? var.virtual_hubs.firewall_public_ip_count : null
   }
 
   tags = merge(
