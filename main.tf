@@ -12,7 +12,7 @@ resource "azurerm_resource_group" "this" {
 
 resource "azurerm_virtual_wan" "this" {
   resource_group_name               = azurerm_resource_group.this.name
-  location                          = coalesce(var.virtual_wan.location, azurerm_resource_group.this.location)
+  location                          = azurerm_resource_group.this.location
   name                              = var.virtual_wan.name
   type                              = var.virtual_wan.type
   disable_vpn_encryption            = var.virtual_wan.disable_vpn_encryption
