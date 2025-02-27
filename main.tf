@@ -11,8 +11,8 @@ resource "azurerm_resource_group" "this" {
 }
 
 resource "azurerm_virtual_wan" "this" {
-  resource_group_name               = var.resource_group_name
-  location                          = var.location
+  resource_group_name               = azurerm_resource_group.this.name
+  location                          = coalesce(var.virtual_wan.location, azurerm_resource_group.this.location)
   name                              = var.virtual_wan.name
   type                              = var.virtual_wan.type
   disable_vpn_encryption            = var.virtual_wan.disable_vpn_encryption
@@ -34,7 +34,7 @@ module "vhub" {
 
   virtual_hubs        = var.virtual_hubs[each.key]
   virtual_wan_id      = azurerm_virtual_wan.this.id
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.this.name
 
   tags = var.tags
 }
