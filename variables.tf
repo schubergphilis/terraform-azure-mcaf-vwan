@@ -8,6 +8,13 @@ variable "location" {
   description = "The location/region where the VWAN will be created"
 }
 
+variable "resource_group" {
+  type = object({
+    name     = string
+    location = string
+  })
+}
+
 variable "virtual_wan" {
   type = object({
     name                              = string
