@@ -66,7 +66,7 @@ resource "azurerm_virtual_hub_routing_intent" "this" {
 resource "azurerm_virtual_hub_bgp_connection" "this" {
   for_each = var.virtual_hubs.hub_bgp_peers
 
-  virtual_hub_id                = azurerm_virtual_hub.this.tags
+  virtual_hub_id                = azurerm_virtual_hub.this.id
   name                          = each.value.name
   peer_asn                      = each.value.peer_asn
   peer_ip                       = each.value.peer_ip
