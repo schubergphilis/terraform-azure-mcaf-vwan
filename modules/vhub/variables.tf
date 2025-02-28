@@ -24,7 +24,6 @@ variable "virtual_hubs" {
     firewall_dns_proxy_enabled        = optional(bool, true)
     firewall_dns_servers              = optional(set(string), ["168.63.129.16"]) # Default Azure DNS
     hub_bgp_peers = optional(map(object({
-      virtual_hub_id     = string
       name               = string
       peer_asn           = number
       peer_ip            = string
