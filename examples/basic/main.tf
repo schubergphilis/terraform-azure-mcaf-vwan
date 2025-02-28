@@ -27,13 +27,16 @@ module "vwan" {
   }
 
   virtual_hubs = {
+
     hub1 = {
       virtual_hub_name     = "example-virtual-hub"
       location             = "eastus"
       address_prefix       = "10.0.0.0/16"
+      virtual_wan_id       = "id"
       routing_intent_name  = "example-routing-intent"
       firewall_name        = "example-firewall"
       firewall_policy_name = "example-firewall-policy"
+
       hub_bgp_peers = {
         peer1 = {
           name               = "example-peer"

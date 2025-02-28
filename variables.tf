@@ -42,7 +42,7 @@ DESCRIPTION
 }
 
 variable "virtual_hubs" {
-  type = object({
+  type = map(object({
     virtual_hub_name                  = string
     virtual_wan_id                    = string
     location                          = string
@@ -57,14 +57,13 @@ variable "virtual_hubs" {
     firewall_dns_proxy_enabled        = optional(bool, true)
     firewall_dns_servers              = optional(set(string), ["168.63.129.16"]) # Default Azure DNS
     hub_bgp_peers = optional(map(object({
-      virtual_hub_id     = string
       name               = string
       peer_asn           = number
       peer_ip            = string
       vnet_connection_id = optional(string)
     })), {})
     tags = optional(map(string), {})
-  })
+  }))
 
   description = <<DESCRIPTION
 This variable defines the configuration for virtual hubs.
