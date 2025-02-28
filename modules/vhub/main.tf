@@ -10,7 +10,7 @@ resource "azurerm_virtual_hub" "this" {
   resource_group_name = var.resource_group_name
   location            = var.virtual_hubs.location
   address_prefix      = var.virtual_hubs.address_prefix
-  virtual_wan_id      = var.virtual_hubs.virtual_wan_id
+  virtual_wan_id      = var.virtual_wan_id
 
   tags = merge(var.tags, { "Resource Type" = "Virtual Hub" })
 }

@@ -3,6 +3,11 @@ variable "resource_group_name" {
   description = "The name of the resource group where the VWAN will be created"
 }
 
+variable "virtual_wan_id" {
+  type        = string
+  description = "The ID of the virtual WAN"
+}
+
 variable "virtual_hubs" {
   type = object({
     virtual_hub_name                  = string
@@ -32,7 +37,6 @@ variable "virtual_hubs" {
 This variable defines the configuration for virtual hubs.
 
 - virtual_hub_name: The name of the virtual hub (string).
-- virtual_wan_id: The ID of the virtual WAN.
 - location: The location/region of the virtual hub (string).
 - address_prefix: The address prefix for the virtual hub (CIDR format).
 - routing_intent_name: The name of the routing intent (string).
