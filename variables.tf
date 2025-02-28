@@ -89,46 +89,6 @@ This variable defines the configuration for virtual hubs.
   - vnet_connection_id: (Optional) The ID of the associated VNet connection.
 - tags: A map of tags to assign to the resource.
 DESCRIPTION
-
-  validation {
-    condition     = alltrue([for k, v in var.virtual_hubs : can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", v.address_prefix))])
-    error_message = "'address_prefix' must be a valid CIDR format (e.g., '10.0.0.0/16')."
-  }
-
-  validation {
-    condition     = alltrue([for k, v in var.virtual_hubs : v.firewall_sku_tier == "Standard" || var.virtual_hubs.firewall_sku_tier == "Premium"])
-    error_message = "'firewall_sku_tier' must be either 'Standard' or 'Premium'."
-  }
-
-  validation {
-    condition     = alltrue([for k, v in var.virtual_hubs : v.firewall_public_ip_count >= 1 && var.virtual_hubs.firewall_public_ip_count <= 250])
-    error_message = "'firewall_public_ip_count' must be between 1 and 250."
-  }
-
-  validation {
-    condition     = alltrue([for k, v in var.virtual_hubs : contains(["Alert", "Deny", "Off"], v.firewall_threat_intelligence_mode)])
-    error_message = "'firewall_threat_intelligence_mode' must be one of: 'Alert', 'Deny', or 'Off'."
-  }
-
-  validation {
-    condition     = alltrue([for k, v in var.virtual_hubs : can(regex("^[a-zA-Z0-9-]{1,80}$", v.virtual_hub_name))])
-    error_message = "'virtual_hub_name' must be 1-80 characters long and can only contain letters, numbers, and hyphens."
-  }
-  validation {
-    condition = alltrue([
-      for v in values(var.virtual_hubs) :
-      alltrue([for pv in values(v.hub_bgp_peers) : pv.peer_asn >= 1 && pv.peer_asn <= 4294967295])
-    ])
-    error_message = "'peer_asn' must be a valid ASN between 1 and 4294967295."
-  }
-
-  validation {
-    condition = alltrue([
-      for v in values(var.virtual_hubs) :
-      alltrue([for pv in values(v.hub_bgp_peers) : can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", pv.peer_ip))])
-    ])
-    error_message = "'peer_ip' must be a valid IPv4 address."
-  }
 }
 
 variable "tags" {
