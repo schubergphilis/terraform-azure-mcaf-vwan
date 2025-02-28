@@ -15,6 +15,7 @@ variable "virtual_hubs" {
     firewall_sku_tier                 = string
     firewall_public_ip_count          = number
     firewall_threat_intelligence_mode = string
+    firewall_intrusion_detection_mode = string
     firewall_dns_proxy_enabled        = bool
     firewall_dns_servers              = list(string)
   })

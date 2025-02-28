@@ -50,6 +50,13 @@ resource "azurerm_firewall_policy" "this" {
   sku                      = var.virtual_hubs.firewall_sku_tier
   threat_intelligence_mode = var.virtual_hubs.firewall_threat_intelligence_mode
 
+  dynamic "intrusion_detection" {
+    for_each = var.virtual_hubs.firewall_sku_tier == "Premium" ? [1] : []
+    content {
+      mode = var.virtual_hubs.firewall_intrusion_detection_mode
+    }
+  }
+
   dns {
     proxy_enabled = var.virtual_hubs.firewall_dns_proxy_enabled
     servers       = var.virtual_hubs.firewall_dns_servers
