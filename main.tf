@@ -2,12 +2,8 @@
 resource "azurerm_resource_group" "this" {
   name     = var.resource_group_name
   location = var.location
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Resource Group"
-    })
-  )
+
+  tags = merge(var.tags, { "Resource Type" = "Resource Group" })
 }
 
 resource "azurerm_virtual_wan" "this" {
@@ -19,12 +15,7 @@ resource "azurerm_virtual_wan" "this" {
   allow_branch_to_branch_traffic    = var.virtual_wan.allow_branch_to_branch_traffic
   office365_local_breakout_category = var.virtual_wan.office365_local_breakout_category
 
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Virtual WAN"
-    })
-  )
+  tags = merge(var.tags, { "Resource Type" = "Virtual WAN" })
 }
 
 module "vhub" {
@@ -37,14 +28,4 @@ module "vhub" {
   resource_group_name = var.resource_group_name
 
   tags = var.tags
-}
-
-resource "azurerm_virtual_hub_bgp_connection" "this" {
-  for_each = var.hub_bgp_peers
-
-  virtual_hub_id                = each.value.virtual_hub_id
-  name                          = each.value.name
-  peer_asn                      = each.value.peer_asn
-  peer_ip                       = each.value.peer_ip
-  virtual_network_connection_id = each.value.vnet_connection_id
 }
