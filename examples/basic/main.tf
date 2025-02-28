@@ -21,7 +21,7 @@ module "vwan" {
   source = "../.."
 
   resource_group_name = azurerm_resource_group.this.name
-  location = azurerm_resource_group.this.location
+  location            = azurerm_resource_group.this.location
 
   virtual_wan = {
     name = "example-vwan"
