@@ -23,7 +23,7 @@ module "vhub" {
 
   source = "./modules/vhub"
 
-  virtual_hubs        = var.virtual_hubs[each.key]
+  virtual_hubs        = each.value
   virtual_wan_id      = azurerm_virtual_wan.this.id
   resource_group_name = var.resource_group_name
 
