@@ -56,10 +56,10 @@ variable "virtual_hubs" {
       destination_ports     = optional(list(string), [])
       destination_ip_groups = optional(list(string), [])
     })), [])
-    firewall_intrusion_detection_tls_certificate = optional(list(object({
+    firewall_intrusion_detection_tls_certificate = optional(object({
       key_vault_secret_id = string
       name                = string
-    })), [])
+    }), null)
   }))
   description = <<DESCRIPTION
 This variable defines the configuration for virtual hubs, including firewall settings, routing, and security configurations.

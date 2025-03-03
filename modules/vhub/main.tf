@@ -81,10 +81,11 @@ resource "azurerm_firewall_policy" "this" {
   }
 
   dynamic "tls_certificate" {
-    for_each = var.virtual_hubs.firewall_sku_tier == "Premium" ? [1] : []
+    for_each = var.virtual_hubs.firewall_sku_tier == "Premium" && var.virtual_hubs.firewall_intrusion_detection_tls_certificate != null ? [var.virtual_hubs.firewall_intrusion_detection_tls_certificate] : []
+
     content {
-      key_vault_secret_id = var.virtual_hubs.firewall_intrusion_detection_tls_certificate
-      name                = var.virtual_hubs.firewall_intrusion_detection_tls_certificate
+      key_vault_secret_id = tls_certificate.value.key_vault_secret_id
+      name                = tls_certificate.value.name
     }
   }
 
