@@ -50,6 +50,45 @@ resource "azurerm_firewall_policy" "this" {
   sku                      = var.virtual_hubs.firewall_sku_tier
   threat_intelligence_mode = var.virtual_hubs.firewall_threat_intelligence_mode
 
+  dynamic "intrusion_detection" {
+    for_each = var.virtual_hubs.firewall_sku_tier == "Premium" ? [1] : []
+    content {
+      mode           = var.virtual_hubs.firewall_intrusion_detection_mode
+      private_ranges = try(var.virtual_hubs.firewall_intrusion_detection_private_ranges, [])
+
+      dynamic "signature_overrides" {
+        for_each = try(var.virtual_hubs.firewall_intrusion_detection_signature_overrides, [])
+        content {
+          id    = signature_overrides.value.id
+          state = signature_overrides.value.state
+        }
+      }
+
+      dynamic "traffic_bypass" {
+        for_each = try(var.virtual_hubs.firewall_intrusion_detection_traffic_bypass, [])
+        content {
+          name                  = traffic_bypass.value.name
+          protocol              = traffic_bypass.value.protocol
+          description           = try(traffic_bypass.value.description, null)
+          source_addresses      = try(traffic_bypass.value.source_addresses, [])
+          source_ip_groups      = try(traffic_bypass.value.source_ip_groups, [])
+          destination_addresses = try(traffic_bypass.value.destination_addresses, [])
+          destination_ports     = try(traffic_bypass.value.destination_ports, [])
+          destination_ip_groups = try(traffic_bypass.value.destination_ip_groups, [])
+        }
+      }
+    }
+  }
+
+  dynamic "tls_certificate" {
+    for_each = var.virtual_hubs.firewall_sku_tier == "Premium" && var.virtual_hubs.firewall_intrusion_detection_tls_certificate != null ? [var.virtual_hubs.firewall_intrusion_detection_tls_certificate] : []
+
+    content {
+      key_vault_secret_id = tls_certificate.value.key_vault_secret_id
+      name                = tls_certificate.value.name
+    }
+  }
+
   dns {
     proxy_enabled = var.virtual_hubs.firewall_dns_proxy_enabled
     servers       = var.virtual_hubs.firewall_dns_servers
