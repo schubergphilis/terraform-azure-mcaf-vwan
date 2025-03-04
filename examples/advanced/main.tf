@@ -39,18 +39,18 @@ module "vhub" {
 
   for_each = {
     hub1 = {
-      virtual_hub_name                  = "example-virtual-hub"
-      location                          = "eastus"
-      address_prefix                    = "10.0.0.0/16"
-      routing_intent_name               = "example-routing-intent"
-      firewall_name                     = "example-firewall"
-      firewall_zones                    = ["1", "2", "3"]
-      firewall_policy_name              = "example-firewall-policy"
-      firewall_sku_tier                 = "Premium"
-      firewall_public_ip_count          = 1
-      firewall_threat_intelligence_mode = "Alert"
-      firewall_dns_proxy_enabled        = true
-      firewall_dns_servers              = ["8.8.8.8", "8.8.4.4"]
+      virtual_hub_name                            = "example-virtual-hub"
+      location                                    = "eastus"
+      address_prefix                              = "10.0.0.0/16"
+      routing_intent_name                         = "example-routing-intent"
+      firewall_name                               = "example-firewall"
+      firewall_zones                              = ["1", "2", "3"]
+      firewall_policy_name                        = "example-firewall-policy"
+      firewall_sku_tier                           = "Premium"
+      firewall_public_ip_count                    = 1
+      firewall_threat_intelligence_mode           = "Alert"
+      firewall_dns_proxy_enabled                  = true
+      firewall_dns_servers                        = ["8.8.8.8", "8.8.4.4"]
       firewall_intrusion_detection_mode           = "Deny"
       firewall_intrusion_detection_private_ranges = ["10.0.0.0/28"]
       firewall_intrusion_detection_signature_overrides = [
@@ -69,9 +69,9 @@ module "vhub" {
           destination_ports     = ["443"]
       }]
       firewall_intrusion_detection_tls_certificate = {
-      key_vault_secret_id = "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx/resourceGroups/example-resource-group/providers/Microsoft.KeyVault/vaults/example-kv"
-      name                = "certname"
-    }
+        key_vault_secret_id = "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx/resourceGroups/example-resource-group/providers/Microsoft.KeyVault/vaults/example-kv"
+        name                = "certname"
+      }
       hub_bgp_peers = {
         peer1 = {
           virtual_hub_id     = "example-virtual-hub-id"
