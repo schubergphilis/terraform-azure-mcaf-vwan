@@ -3,10 +3,61 @@ output "resource_group_id" {
   value       = azurerm_resource_group.this.id
 }
 
-output "virtual_hubs" {
-  value = azurerm_virtual_wan.this.virtual_hubs
+output "virtual_wan" {
+  description = "output the resource of the vwan"
+  value = azurerm_virtual_wan.this
 }
 
-output "vpn_sites" {
-  value = azurerm_virtual_wan.this.vpn_sites
+output "virtual_wan_id" {
+  description = "ID of the Virtual wan created by the module"
+  value = azurerm_virtual_wan.this.id
+}
+
+output "vhub_ids" {
+  description = "Map of IDs of the Virtual Hubs created by the module"
+  value = {
+    for k, v in module.vhub : k => v.vhub_id
+  }
+}
+
+output "vhub_firewall_ids" {
+  description = "Map of IDs of the Firewalls created in each Virtual Hub"
+  value = {
+    for k, v in module.vhub : k => v.firewall_id
+  }
+}
+
+output "vhub_firewall_policy_ids" {
+  description = "Map of IDs of the Firewall Policies created in each Virtual Hub"
+  value = {
+    for k, v in module.vhub : k => v.firewall_policy_id
+  }
+}
+
+output "vhub_default_route_table_ids" {
+  description = "Map of IDs of the default Route Tables in each Virtual Hub"
+  value = {
+    for k, v in module.vhub : k => v.default_route_table_id
+  }
+}
+
+output "vhub_virtual_router_asns" {
+  description = "Map of Autonomous System Numbers of the Virtual Hub BGP routers"
+  value = {
+    for k, v in module.vhub : k => v.virtual_router_asn
+  }
+}
+
+output "vhub_virtual_router_ips" {
+  description = "Map of IP addresses of the Virtual Hub BGP routers"
+  value = {
+    for k, v in module.vhub : k => v.virtual_router_ips
+  }
+}
+
+output "vhub_address_prefixes" {
+  description = "Map of Address Prefixes used for each Virtual Hub"
+  value = {
+    for k, v in module.vhub : k => v.address_prefix
+  }
 }
