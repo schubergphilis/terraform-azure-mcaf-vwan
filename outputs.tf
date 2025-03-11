@@ -20,6 +20,13 @@ output "vhub_ids" {
   }
 }
 
+output "vhub_names" {
+  description = "Map of names of the Virtual Hubs created by the module"
+  value = {
+    for k, v in module.vhub : k => v.vhub_name
+  }
+}
+
 output "vhub_firewall_ids" {
   description = "Map of IDs of the Firewalls created in each Virtual Hub"
   value = {

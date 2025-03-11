@@ -13,6 +13,11 @@ output "vhub_id" {
   value       = azurerm_virtual_hub.this.id
 }
 
+output "vhub_name" {
+  description = "The name of the Virtual Hub."
+  value       = azurerm_virtual_hub.this.name
+}
+
 output "default_route_table_id" {
   description = "The ID of the default Route Table in the Virtual Hub."
   value       = azurerm_virtual_hub.this.default_route_table_id
