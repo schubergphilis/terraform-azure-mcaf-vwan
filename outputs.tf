@@ -5,12 +5,12 @@ output "resource_group_id" {
 
 output "virtual_wan" {
   description = "output the resource of the vwan"
-  value = azurerm_virtual_wan.this
+  value       = azurerm_virtual_wan.this
 }
 
 output "virtual_wan_id" {
   description = "ID of the Virtual wan created by the module"
-  value = azurerm_virtual_wan.this.id
+  value       = azurerm_virtual_wan.this.id
 }
 
 output "vhub_ids" {
