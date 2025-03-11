@@ -49,6 +49,7 @@
 | <a name="output_vhub_firewall_ids"></a> [vhub\_firewall\_ids](#output\_vhub\_firewall\_ids) | Map of IDs of the Firewalls created in each Virtual Hub |
 | <a name="output_vhub_firewall_policy_ids"></a> [vhub\_firewall\_policy\_ids](#output\_vhub\_firewall\_policy\_ids) | Map of IDs of the Firewall Policies created in each Virtual Hub |
 | <a name="output_vhub_ids"></a> [vhub\_ids](#output\_vhub\_ids) | Map of IDs of the Virtual Hubs created by the module |
+| <a name="output_vhub_names"></a> [vhub\_names](#output\_vhub\_names) | Map of names of the Virtual Hubs created by the module |
 | <a name="output_vhub_virtual_router_asns"></a> [vhub\_virtual\_router\_asns](#output\_vhub\_virtual\_router\_asns) | Map of Autonomous System Numbers of the Virtual Hub BGP routers |
 | <a name="output_vhub_virtual_router_ips"></a> [vhub\_virtual\_router\_ips](#output\_vhub\_virtual\_router\_ips) | Map of IP addresses of the Virtual Hub BGP routers |
 | <a name="output_virtual_wan"></a> [virtual\_wan](#output\_virtual\_wan) | output the resource of the vwan |
