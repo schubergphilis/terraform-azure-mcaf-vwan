@@ -44,4 +44,14 @@
 | Name | Description |
 |------|-------------|
 | <a name="output_resource_group_id"></a> [resource\_group\_id](#output\_resource\_group\_id) | ID of the Resource Group created by the module |
+| <a name="output_vhub_address_prefixes"></a> [vhub\_address\_prefixes](#output\_vhub\_address\_prefixes) | Map of Address Prefixes used for each Virtual Hub |
+| <a name="output_vhub_default_route_table_ids"></a> [vhub\_default\_route\_table\_ids](#output\_vhub\_default\_route\_table\_ids) | Map of IDs of the default Route Tables in each Virtual Hub |
+| <a name="output_vhub_firewall_ids"></a> [vhub\_firewall\_ids](#output\_vhub\_firewall\_ids) | Map of IDs of the Firewalls created in each Virtual Hub |
+| <a name="output_vhub_firewall_policy_ids"></a> [vhub\_firewall\_policy\_ids](#output\_vhub\_firewall\_policy\_ids) | Map of IDs of the Firewall Policies created in each Virtual Hub |
+| <a name="output_vhub_ids"></a> [vhub\_ids](#output\_vhub\_ids) | Map of IDs of the Virtual Hubs created by the module |
+| <a name="output_vhub_names"></a> [vhub\_names](#output\_vhub\_names) | Map of names of the Virtual Hubs created by the module |
+| <a name="output_vhub_virtual_router_asns"></a> [vhub\_virtual\_router\_asns](#output\_vhub\_virtual\_router\_asns) | Map of Autonomous System Numbers of the Virtual Hub BGP routers |
+| <a name="output_vhub_virtual_router_ips"></a> [vhub\_virtual\_router\_ips](#output\_vhub\_virtual\_router\_ips) | Map of IP addresses of the Virtual Hub BGP routers |
+| <a name="output_virtual_wan"></a> [virtual\_wan](#output\_virtual\_wan) | output the resource of the vwan |
+| <a name="output_virtual_wan_id"></a> [virtual\_wan\_id](#output\_virtual\_wan\_id) | ID of the Virtual wan created by the module |
 <!-- END_TF_DOCS -->
