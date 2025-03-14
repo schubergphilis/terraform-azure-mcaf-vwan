@@ -55,9 +55,9 @@ resource "azurerm_firewall" "this" {
   }
 
   dynamic "ip_configuration" {
-    for_each = var.virtual_hubs.use_byoip && length(var.virtual_hubs.byoip_public_ip_ids) == 0 ? azurerm_public_ip.firewall_public_ip : var.virtual_hubs.byoip_public_ip_ids
+    for_each = var.virtual_hubs.use_byoip && length(var.virtual_hubs.byoip_public_ip_ids) == 0 ? tolist(azurerm_public_ip.firewall_public_ip) : var.virtual_hubs.byoip_public_ip_ids
     content {
-      name                 = var.virtual_hubs.use_byoip ? "byoip-${index(azurerm_public_ip.firewall_public_ip, ip_configuration.value)}" : "byoip-${index(var.virtual_hubs.byoip_public_ip_ids, ip_configuration.value)}"
+      name                 = var.virtual_hubs.use_byoip ? "byoip-${index(tolist(azurerm_public_ip.firewall_public_ip), ip_configuration.value)}" : "byoip-${index(var.virtual_hubs.byoip_public_ip_ids, ip_configuration.value)}"
       public_ip_address_id = var.virtual_hubs.use_byoip ? ip_configuration.value.id : ip_configuration.value
     }
   }
@@ -69,6 +69,7 @@ resource "azurerm_firewall" "this" {
     })
   )
 }
+
 
 resource "azurerm_firewall_policy" "this" {
   name                     = var.virtual_hubs.firewall_policy_name
