@@ -30,15 +30,43 @@ resource "azurerm_firewall" "this" {
   firewall_policy_id  = azurerm_firewall_policy.this.id
   zones               = var.virtual_hubs.firewall_zones
 
+
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
-    public_ip_count = var.virtual_hubs.firewall_public_ip_count
+    public_ip_count = var.virtual_hubs.use_byoip ? 0 : var.virtual_hubs.firewall_public_ip_count
+  }
+
+  dynamic "ip_configuration" {
+    for_each = var.virtual_hubs.use_byoip ? var.virtual_hubs.byoip_public_ip_ids : []
+    content {
+      name                 = "byoip-${index(var.virtual_hubs.byoip_public_ip_ids, ip_configuration.value)}"
+      public_ip_address_id = ip_configuration.value
+    }
   }
 
   tags = merge(
     try(var.tags),
     tomap({
       "Resource Type" = "Firewall"
+    })
+  )
+}
+
+# Create Public IP resources if BYOIP is enabled
+resource "azurerm_public_ip" "firewall_public_ip" {
+  count = var.virtual_hubs.use_byoip && length(var.virtual_hubs.byoip_public_ip_ids) == 0 ? var.virtual_hubs.firewall_public_ip_count : 0
+
+  name                = "${var.virtual_hubs.firewall_name}-pip-${count.index}"
+  resource_group_name = var.resource_group_name
+  location            = var.virtual_hubs.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  zones               = ["1", "2", "3"]
+
+  tags = merge(
+    try(var.tags),
+    tomap({
+      "Resource Type" = "Public IP"
     })
   )
 }
