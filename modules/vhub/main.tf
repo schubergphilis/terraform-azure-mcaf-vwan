@@ -33,7 +33,7 @@ resource "azurerm_firewall" "this" {
 
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
-    public_ip_count = var.virtual_hubs.use_byoip ? 0 : var.virtual_hubs.firewall_public_ip_count
+    public_ip_count = var.virtual_hubs.use_byoip ? max(var.virtual_hubs.firewall_public_ip_count, 1) : var.virtual_hubs.firewall_public_ip_count
   }
 
   dynamic "ip_configuration" {
