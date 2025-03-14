@@ -21,38 +21,7 @@ resource "azurerm_virtual_hub" "this" {
   )
 }
 
-resource "azurerm_firewall" "this" {
-  name                = var.virtual_hubs.firewall_name
-  resource_group_name = var.resource_group_name
-  location            = var.virtual_hubs.location
-  sku_name            = "AZFW_Hub"
-  sku_tier            = var.virtual_hubs.firewall_sku_tier
-  firewall_policy_id  = azurerm_firewall_policy.this.id
-  zones               = var.virtual_hubs.firewall_zones
-
-
-  virtual_hub {
-    virtual_hub_id  = azurerm_virtual_hub.this.id
-    public_ip_count = var.virtual_hubs.use_byoip ? max(var.virtual_hubs.firewall_public_ip_count, 1) : var.virtual_hubs.firewall_public_ip_count
-  }
-
-  dynamic "ip_configuration" {
-    for_each = var.virtual_hubs.use_byoip ? var.virtual_hubs.byoip_public_ip_ids : []
-    content {
-      name                 = "byoip-${index(var.virtual_hubs.byoip_public_ip_ids, ip_configuration.value)}"
-      public_ip_address_id = ip_configuration.value
-    }
-  }
-
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Firewall"
-    })
-  )
-}
-
-# Create Public IP resources if BYOIP is enabled
+# Create Public IP resources if BYOIP is enabled and byoip_public_ip_ids is empty
 resource "azurerm_public_ip" "firewall_public_ip" {
   count = var.virtual_hubs.use_byoip && length(var.virtual_hubs.byoip_public_ip_ids) == 0 ? var.virtual_hubs.firewall_public_ip_count : 0
 
@@ -67,6 +36,37 @@ resource "azurerm_public_ip" "firewall_public_ip" {
     try(var.tags),
     tomap({
       "Resource Type" = "Public IP"
+    })
+  )
+}
+
+# Configure Azure Firewall and use the created public IPs if use_byoip is enabled and byoip_public_ip_ids is empty
+resource "azurerm_firewall" "this" {
+  name                = var.virtual_hubs.firewall_name
+  resource_group_name = var.resource_group_name
+  location            = var.virtual_hubs.location
+  sku_name            = "AZFW_Hub"
+  sku_tier            = var.virtual_hubs.firewall_sku_tier
+  firewall_policy_id  = azurerm_firewall_policy.this.id
+  zones               = var.virtual_hubs.firewall_zones
+
+  virtual_hub {
+    virtual_hub_id  = azurerm_virtual_hub.this.id
+    public_ip_count = var.virtual_hubs.use_byoip ? max(var.virtual_hubs.firewall_public_ip_count, 1) : var.virtual_hubs.firewall_public_ip_count
+  }
+
+  dynamic "ip_configuration" {
+    for_each = var.virtual_hubs.use_byoip && length(var.virtual_hubs.byoip_public_ip_ids) == 0 ? azurerm_public_ip.firewall_public_ip : var.virtual_hubs.byoip_public_ip_ids
+    content {
+      name                 = var.virtual_hubs.use_byoip ? "byoip-${index(azurerm_public_ip.firewall_public_ip, ip_configuration.value)}" : "byoip-${index(var.virtual_hubs.byoip_public_ip_ids, ip_configuration.value)}"
+      public_ip_address_id = var.virtual_hubs.use_byoip ? ip_configuration.value.id : ip_configuration.value
+    }
+  }
+
+  tags = merge(
+    try(var.tags),
+    tomap({
+      "Resource Type" = "Firewall"
     })
   )
 }
