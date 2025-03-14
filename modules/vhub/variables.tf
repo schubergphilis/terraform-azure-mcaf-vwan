@@ -10,7 +10,7 @@ variable "virtual_hubs" {
     address_prefix                              = string
     routing_intent_name                         = string
     use_byoip                                   = optional(bool, "false")
-    public_ip_address_id                        = optional(list(string), [])
+    public_ip_address_id                        = optional(string, null)
     firewall_name                               = string
     firewall_zones                              = set(string)
     firewall_policy_name                        = string
