@@ -22,13 +22,14 @@ resource "azurerm_virtual_hub" "this" {
 }
 
 resource "azurerm_public_ip" "firewall_public_ip" {
-  count = var.virtual_hubs.use_byoip ? max(var.virtual_hubs.firewall_public_ip_count, 1) : max(var.virtual_hubs.firewall_public_ip_count, 1)
+  count = var.virtual_hubs.use_byoip ? var.virtual_hubs.firewall_public_ip_count : 0
 
   name                = "${var.virtual_hubs.firewall_name}-pip-${count.index}"
   resource_group_name = var.resource_group_name
   location            = var.virtual_hubs.location
   allocation_method   = "Static"
-  sku                  = "Standard"
+  sku                 = "Standard"
+  zones               = ["1", "2", "3"]
 
   tags = merge(
     try(var.tags),
@@ -53,6 +54,7 @@ resource "azurerm_firewall" "this" {
   }
 
   dynamic "ip_configuration" {
+    # Only create IP configuration if use_byoip is true, using created public IPs
     for_each = var.virtual_hubs.use_byoip ? tolist(azurerm_public_ip.firewall_public_ip) : []
     content {
       name                 = "byoip-${index(tolist(azurerm_public_ip.firewall_public_ip), ip_configuration.value)}"
@@ -67,6 +69,7 @@ resource "azurerm_firewall" "this" {
     })
   )
 }
+
 resource "azurerm_firewall_policy" "this" {
   name                     = var.virtual_hubs.firewall_policy_name
   resource_group_name      = var.resource_group_name
