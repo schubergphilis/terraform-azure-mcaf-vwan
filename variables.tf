@@ -33,7 +33,6 @@ variable "virtual_hubs" {
     location                                    = string
     routing_intent_name                         = string
     use_byoip                                   = optional(bool, "false")
-    byoip_public_ip_ids                         = optional(list(string), [])
     firewall_name                               = string
     firewall_zones                              = optional(set(string), ["1", "2", "3"])
     firewall_policy_name                        = string

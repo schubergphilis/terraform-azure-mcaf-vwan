@@ -21,9 +21,8 @@ resource "azurerm_virtual_hub" "this" {
   )
 }
 
-# Create Public IP resources if BYOIP is enabled and byoip_public_ip_ids is empty
 resource "azurerm_public_ip" "firewall_public_ip" {
-  count = var.virtual_hubs.use_byoip && length(var.virtual_hubs.byoip_public_ip_ids) == 0 ? var.virtual_hubs.firewall_public_ip_count : 0
+  count = var.virtual_hubs.use_byoip ? var.virtual_hubs.firewall_public_ip_count : 0
 
   name                = "${var.virtual_hubs.firewall_name}-pip-${count.index}"
   resource_group_name = var.resource_group_name
@@ -51,14 +50,14 @@ resource "azurerm_firewall" "this" {
 
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
-    public_ip_count = var.virtual_hubs.use_byoip ? max(var.virtual_hubs.firewall_public_ip_count, 1) : var.virtual_hubs.firewall_public_ip_count
+    public_ip_count = var.virtual_hubs.use_byoip ? var.virtual_hubs.firewall_public_ip_count : 0
   }
 
   dynamic "ip_configuration" {
-    for_each = var.virtual_hubs.use_byoip && length(var.virtual_hubs.byoip_public_ip_ids) == 0 ? tolist(azurerm_public_ip.firewall_public_ip) : var.virtual_hubs.byoip_public_ip_ids
+    for_each = var.virtual_hubs.use_byoip ? tolist(azurerm_public_ip.firewall_public_ip) : []
     content {
-      name                 = var.virtual_hubs.use_byoip ? "byoip-${index(tolist(azurerm_public_ip.firewall_public_ip), ip_configuration.value)}" : "byoip-${index(var.virtual_hubs.byoip_public_ip_ids, ip_configuration.value)}"
-      public_ip_address_id = var.virtual_hubs.use_byoip ? ip_configuration.value.id : ip_configuration.value
+      name                 = "byoip-${index(tolist(azurerm_public_ip.firewall_public_ip), ip_configuration.value)}"
+      public_ip_address_id = ip_configuration.value.id
     }
   }
 
@@ -69,7 +68,6 @@ resource "azurerm_firewall" "this" {
     })
   )
 }
-
 
 resource "azurerm_firewall_policy" "this" {
   name                     = var.virtual_hubs.firewall_policy_name
