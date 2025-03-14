@@ -40,7 +40,6 @@ resource "azurerm_public_ip" "firewall_public_ip" {
   )
 }
 
-# Configure Azure Firewall and use the created public IPs if use_byoip is enabled and byoip_public_ip_ids is empty
 resource "azurerm_firewall" "this" {
   name                = var.virtual_hubs.firewall_name
   resource_group_name = var.resource_group_name
