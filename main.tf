@@ -1,17 +1,20 @@
 # This Terraform configuration defines resources and a module for deploying an Azure Virtual WAN setup.
 resource "azurerm_resource_group" "this" {
+  count = var.create_new_resource_group ? 1 : 0
+
   name     = var.resource_group_name
   location = var.location
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Resource Group"
-    })
-  )
+
+  tags = merge(var.tags, { "Resource Type" = "Resource Group" })
+}
+
+data "azurerm_resource_group" "this" {
+  count = !var.create_new_resource_group ? 1 : 0
+  name  = var.resource_group_name
 }
 
 resource "azurerm_virtual_wan" "this" {
-  resource_group_name               = var.resource_group_name
+  resource_group_name               = var.create_new_resource_group ? azurerm_resource_group.this[0].name : data.azurerm_resource_group.this[0].name
   location                          = var.location
   name                              = var.virtual_wan.name
   type                              = var.virtual_wan.type
@@ -19,12 +22,7 @@ resource "azurerm_virtual_wan" "this" {
   allow_branch_to_branch_traffic    = var.virtual_wan.allow_branch_to_branch_traffic
   office365_local_breakout_category = var.virtual_wan.office365_local_breakout_category
 
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Virtual WAN"
-    })
-  )
+  tags = merge(var.tags, { "Resource Type" = "Virtual WAN" })
 }
 
 module "vhub" {
@@ -32,9 +30,26 @@ module "vhub" {
 
   source = "./modules/vhub"
 
-  virtual_hubs        = var.virtual_hubs[each.key]
-  virtual_wan_id      = azurerm_virtual_wan.this.id
-  resource_group_name = var.resource_group_name
+  virtual_wan_id                                   = azurerm_virtual_wan.this.id
+  resource_group_name                              = var.create_new_resource_group ? azurerm_resource_group.this[0].name : data.azurerm_resource_group.this[0].name
+  virtual_hub_name                                 = each.value.virtual_hub_name
+  location                                         = each.value.location
+  address_prefix                                   = each.value.address_prefix
+  routing_intent_name                              = each.value.routing_intent_name
+  firewall_name                                    = each.value.firewall_name
+  firewall_zones                                   = each.value.firewall_zones
+  firewall_policy_name                             = each.value.firewall_policy_name
+  firewall_sku_tier                                = each.value.firewall_sku_tier
+  firewall_public_ip_count                         = each.value.firewall_public_ip_count
+  firewall_threat_intelligence_mode                = each.value.firewall_threat_intelligence_mode
+  firewall_intrusion_detection_mode                = each.value.firewall_intrusion_detection_mode
+  firewall_dns_proxy_enabled                       = each.value.firewall_dns_proxy_enabled
+  firewall_dns_servers                             = each.value.firewall_dns_servers
+  firewall_intrusion_detection_private_ranges      = each.value.firewall_intrusion_detection_private_ranges
+  firewall_intrusion_detection_signature_overrides = each.value.firewall_intrusion_detection_signature_overrides
+  firewall_intrusion_detection_traffic_bypass      = each.value.firewall_intrusion_detection_traffic_bypass
+  firewall_intrusion_detection_tls_certificate     = each.value.firewall_intrusion_detection_tls_certificate
+
 
   tags = var.tags
 }
