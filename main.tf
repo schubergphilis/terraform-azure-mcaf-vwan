@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "this" {
 }
 
 resource "azurerm_virtual_wan" "this" {
-  resource_group_name               = var.resource_group_name
+  resource_group_name               = var.create_new_resource_group ? azurerm_resource_group.this[0].name : var.resource_group_name
   location                          = var.location
   name                              = var.virtual_wan.name
   type                              = var.virtual_wan.type
