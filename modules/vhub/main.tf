@@ -7,27 +7,27 @@
 
 
 resource "azurerm_virtual_hub" "this" {
-  name                = var.virtual_hubs.virtual_hub_name
+  name                = var.virtual_hub_name
   resource_group_name = var.resource_group_name
-  location            = var.virtual_hubs.location
-  address_prefix      = var.virtual_hubs.address_prefix
+  location            = var.location
+  address_prefix      = var.address_prefix
   virtual_wan_id      = var.virtual_wan_id
 
   tags = merge(var.tags, { "Resource Type" = "Virtual Hub" })
 }
 
 resource "azurerm_firewall" "this" {
-  name                = var.virtual_hubs.firewall_name
+  name                = var.firewall_name
   resource_group_name = var.resource_group_name
-  location            = var.virtual_hubs.location
+  location            = var.location
   sku_name            = "AZFW_Hub"
-  sku_tier            = var.virtual_hubs.firewall_sku_tier
+  sku_tier            = var.firewall_sku_tier
   firewall_policy_id  = azurerm_firewall_policy.this.id
-  zones               = var.virtual_hubs.firewall_zones
+  zones               = var.firewall_zones
 
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
-    public_ip_count = var.virtual_hubs.firewall_public_ip_count
+    public_ip_count = var.firewall_public_ip_count
   }
 
   tags = merge(var.tags, { "Resource Type" = "Firewall" })
@@ -35,21 +35,21 @@ resource "azurerm_firewall" "this" {
 }
 
 resource "azurerm_firewall_policy" "this" {
-  name                     = var.virtual_hubs.firewall_policy_name
+  name                     = var.firewall_policy_name
   resource_group_name      = var.resource_group_name
-  location                 = var.virtual_hubs.location
-  sku                      = var.virtual_hubs.firewall_sku_tier
-  threat_intelligence_mode = var.virtual_hubs.firewall_threat_intelligence_mode
+  location                 = var.location
+  sku                      = var.firewall_sku_tier
+  threat_intelligence_mode = var.firewall_threat_intelligence_mode
 
   dynamic "intrusion_detection" {
-    for_each = var.virtual_hubs.firewall_sku_tier == "Premium" ? [1] : []
+    for_each = var.firewall_sku_tier == "Premium" ? [1] : []
 
     content {
-      mode           = var.virtual_hubs.firewall_intrusion_detection_mode
-      private_ranges = try(var.virtual_hubs.firewall_intrusion_detection_private_ranges, [])
+      mode           = var.firewall_intrusion_detection_mode
+      private_ranges = try(var.firewall_intrusion_detection_private_ranges, [])
 
       dynamic "signature_overrides" {
-        for_each = try(var.virtual_hubs.firewall_intrusion_detection_signature_overrides, [])
+        for_each = try(var.firewall_intrusion_detection_signature_overrides, [])
         content {
           id    = signature_overrides.value.id
           state = signature_overrides.value.state
@@ -57,7 +57,7 @@ resource "azurerm_firewall_policy" "this" {
       }
 
       dynamic "traffic_bypass" {
-        for_each = try(var.virtual_hubs.firewall_intrusion_detection_traffic_bypass, [])
+        for_each = try(var.firewall_intrusion_detection_traffic_bypass, [])
 
         content {
           name                  = traffic_bypass.value.name
@@ -74,7 +74,7 @@ resource "azurerm_firewall_policy" "this" {
   }
 
   dynamic "tls_certificate" {
-    for_each = var.virtual_hubs.firewall_sku_tier == "Premium" && var.virtual_hubs.firewall_intrusion_detection_tls_certificate != null ? [var.virtual_hubs.firewall_intrusion_detection_tls_certificate] : []
+    for_each = var.firewall_sku_tier == "Premium" && var.firewall_intrusion_detection_tls_certificate != null ? [var.firewall_intrusion_detection_tls_certificate] : []
 
     content {
       key_vault_secret_id = tls_certificate.value.key_vault_secret_id
@@ -83,15 +83,15 @@ resource "azurerm_firewall_policy" "this" {
   }
 
   dns {
-    proxy_enabled = var.virtual_hubs.firewall_dns_proxy_enabled
-    servers       = var.virtual_hubs.firewall_dns_servers
+    proxy_enabled = var.firewall_dns_proxy_enabled
+    servers       = var.firewall_dns_servers
   }
 
   tags = merge(var.tags, { "Resource Type" = "Firewall Policy" })
 }
 
 resource "azurerm_virtual_hub_routing_intent" "this" {
-  name           = var.virtual_hubs.routing_intent_name
+  name           = var.routing_intent_name
   virtual_hub_id = azurerm_virtual_hub.this.id
 
   routing_policy {
