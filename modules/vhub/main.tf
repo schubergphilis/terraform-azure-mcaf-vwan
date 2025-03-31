@@ -13,12 +13,7 @@ resource "azurerm_virtual_hub" "this" {
   address_prefix      = var.virtual_hubs.address_prefix
   virtual_wan_id      = var.virtual_wan_id
 
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Virtual Hub"
-    })
-  )
+  tags = merge(var.tags, { "Resource Type" = "Virtual Hub" })
 }
 
 resource "azurerm_firewall" "this" {
@@ -35,12 +30,8 @@ resource "azurerm_firewall" "this" {
     public_ip_count = var.virtual_hubs.firewall_public_ip_count
   }
 
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Firewall"
-    })
-  )
+  tags = merge(var.tags, { "Resource Type" = "Firewall" })
+
 }
 
 resource "azurerm_firewall_policy" "this" {
@@ -52,6 +43,7 @@ resource "azurerm_firewall_policy" "this" {
 
   dynamic "intrusion_detection" {
     for_each = var.virtual_hubs.firewall_sku_tier == "Premium" ? [1] : []
+
     content {
       mode           = var.virtual_hubs.firewall_intrusion_detection_mode
       private_ranges = try(var.virtual_hubs.firewall_intrusion_detection_private_ranges, [])
@@ -66,6 +58,7 @@ resource "azurerm_firewall_policy" "this" {
 
       dynamic "traffic_bypass" {
         for_each = try(var.virtual_hubs.firewall_intrusion_detection_traffic_bypass, [])
+
         content {
           name                  = traffic_bypass.value.name
           protocol              = traffic_bypass.value.protocol
@@ -94,12 +87,7 @@ resource "azurerm_firewall_policy" "this" {
     servers       = var.virtual_hubs.firewall_dns_servers
   }
 
-  tags = merge(
-    try(var.tags),
-    tomap({
-      "Resource Type" = "Firewall Policy"
-    })
-  )
+  tags = merge(var.tags, { "Resource Type" = "Firewall Policy" })
 }
 
 resource "azurerm_virtual_hub_routing_intent" "this" {
