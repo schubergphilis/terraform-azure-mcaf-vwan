@@ -1,6 +1,6 @@
 output "resource_group_id" {
   description = "ID of the Resource Group created by the module"
-  value       = azurerm_resource_group.this.id
+  value       = var.create_new_resource_group ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
 }
 
 output "virtual_wan" {
