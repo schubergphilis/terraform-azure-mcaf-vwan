@@ -8,13 +8,8 @@ resource "azurerm_resource_group" "this" {
   tags = merge(var.tags, { "Resource Type" = "Resource Group" })
 }
 
-data "azurerm_resource_group" "this" {
-  count = !var.create_new_resource_group ? 1 : 0
-  name  = var.resource_group_name
-}
-
 resource "azurerm_virtual_wan" "this" {
-  resource_group_name               = var.create_new_resource_group ? azurerm_resource_group.this[0].name : data.azurerm_resource_group.this[0].name
+  resource_group_name               = var.create_new_resource_group ? azurerm_resource_group.this[0].name : var.resource_group_name
   location                          = var.location
   name                              = var.virtual_wan.name
   type                              = var.virtual_wan.type
@@ -31,7 +26,7 @@ module "vhub" {
   source = "./modules/vhub"
 
   virtual_wan_id                                   = azurerm_virtual_wan.this.id
-  resource_group_name                              = var.create_new_resource_group ? azurerm_resource_group.this[0].name : data.azurerm_resource_group.this[0].name
+  resource_group_name                              = var.create_new_resource_group ? azurerm_resource_group.this[0].name : var.resource_group_name
   virtual_hub_name                                 = each.value.virtual_hub_name
   location                                         = each.value.location
   address_prefix                                   = each.value.address_prefix
