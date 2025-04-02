@@ -30,7 +30,7 @@ resource "azurerm_firewall" "this" {
     public_ip_count = var.firewall_public_ip_count
   }
 
-
+  tags = merge(var.tags, { "Resource Type" = "Firewall" })
 
 }
 
