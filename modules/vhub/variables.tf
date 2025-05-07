@@ -57,10 +57,22 @@ variable "firewall_sku_tier" {
 
 variable "firewall_public_ip_count" {
   type        = number
-  description = "The number of public IPs allocated to the firewall."
+  default     = null
+  description = "The number of public IPs allocated to the firewall. Required if firewall_public_ip_prefix_id is not set."
+  # validation {
+  #   condition     = var.firewall_public_ip_count == null || (var.firewall_public_ip_count >= 1 && var.firewall_public_ip_count <= 10)
+  #   error_message = "firewall_public_ip_count must be between 1 and 10."
+  # }
+}
+
+variable "firewall_public_ip_prefix_length" {
+  type        = number
+  default     = null
+  description = "The public ip prefix length that will be requested for the firewall. Required if firewall_public_ip_count is not set."
+
   validation {
-    condition     = var.firewall_public_ip_count >= 1 && var.firewall_public_ip_count <= 3
-    error_message = "firewall_public_ip_count must be between 1 and 3."
+    condition     = var.firewall_public_ip_prefix_length == null || var.firewall_classic_ip_config
+    error_message = "firewall_public_ip_prefix_length can only be used when firewall_classic_ip_config is set to true."
   }
 }
 

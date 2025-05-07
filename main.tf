@@ -36,6 +36,7 @@ module "vhub" {
   firewall_policy_name                             = each.value.firewall_policy_name
   firewall_sku_tier                                = each.value.firewall_sku_tier
   firewall_public_ip_count                         = each.value.firewall_public_ip_count
+  firewall_public_ip_prefix_length                 = each.value.firewall_public_ip_prefix_length
   firewall_threat_intelligence_mode                = each.value.firewall_threat_intelligence_mode
   firewall_intrusion_detection_mode                = each.value.firewall_intrusion_detection_mode
   firewall_dns_proxy_enabled                       = each.value.firewall_dns_proxy_enabled

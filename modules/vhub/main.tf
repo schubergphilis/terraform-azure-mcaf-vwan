@@ -26,8 +26,6 @@ resource "azurerm_firewall" "this" {
   firewall_policy_id  = azurerm_firewall_policy.this[0].id
   zones               = var.firewall_zones
 
-
-
   virtual_hub {
     virtual_hub_id  = azurerm_virtual_hub.this.id
     public_ip_count = var.firewall_public_ip_count
@@ -36,15 +34,28 @@ resource "azurerm_firewall" "this" {
   tags = merge(var.tags, { "Resource Type" = "Firewall" })
 }
 
-resource "azurerm_public_ip" "this" {
-  count = var.firewall_deploy && !var.firewall_classic_ip_config ? 1 : 0
+resource "azurerm_public_ip_prefix" "this" {
+  count = var.firewall_deploy && var.firewall_public_ip_prefix_length != null && !var.firewall_classic_ip_config ? 1 : 0
 
-  name                = "${var.firewall_name}-pip"
+  name                = "${var.firewall_name}-pip-prefix"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  prefix_length = var.firewall_public_ip_prefix_length
+
+  tags = merge(var.tags, { "Resource Type" = "Public IP Prefix" })
+}
+
+resource "azurerm_public_ip" "this" {
+  count = var.firewall_deploy && !var.firewall_classic_ip_config ? local.total_ips : 0
+
+  name                = "${var.firewall_name}-pip-${count.index + 1}"
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = var.firewall_zones
+  public_ip_prefix_id = var.firewall_public_ip_prefix_length != null ? azurerm_public_ip_prefix.this[0].id : null
 
   tags = merge(var.tags, { "Resource Type" = "Public IP" })
 }
@@ -67,11 +78,11 @@ resource "azapi_resource" "firewall" {
         tier = var.firewall_sku_tier
       }
       ipConfigurations = [
-        {
-          name = "${var.firewall_name}-pip1"
+        for i, pip in azurerm_public_ip.this : {
+          name = "${var.firewall_name}-pip-${i + 1}"
           properties = {
             publicIPAddress = {
-              id = azurerm_public_ip.this[0].id
+              id = pip.id
             }
           }
         }

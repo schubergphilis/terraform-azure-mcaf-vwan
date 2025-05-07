@@ -44,7 +44,8 @@ variable "virtual_hubs" {
     firewall_zones                              = optional(set(string), ["1", "2", "3"])
     firewall_policy_name                        = string
     firewall_sku_tier                           = string
-    firewall_public_ip_count                    = number
+    firewall_public_ip_count                    = optional(number)
+    firewall_public_ip_prefix_length            = optional(number)
     firewall_threat_intelligence_mode           = string
     firewall_intrusion_detection_mode           = optional(string, "Alert")
     firewall_dns_proxy_enabled                  = optional(bool, true)
@@ -82,7 +83,8 @@ This variable defines the configuration for virtual hubs, including firewall set
 - firewall_zones: Availability zones where the firewall is deployed (set of strings).
 - firewall_policy_name: The name of the firewall policy applied to the firewall (string).
 - firewall_sku_tier**: The SKU tier of the firewall (e.g., "Standard" or "Premium") (string).
-- firewall_public_ip_count: The number of public IPs allocated to the firewall (number).
+- firewall_public_ip_count: The number of public IPs allocated to the firewall (optional, either this or firewall_public_ip_prefix_length should be specified) (number).
+- firewall_public_ip_prefix_length: The prefix length for the public IP prefix reservation (optional, either this or firewall_public_ip_count should be specified) (number).
 - firewall_threat_intelligence_mode: The mode of threat intelligence for the firewall (string).
 - firewall_intrusion_detection_mode: The mode of intrusion detection (e.g., "Alert" or "Deny") (optional, defaults to "Alert") (string).
 - firewall_dns_proxy_enabled: Indicates whether the DNS proxy is enabled for the firewall (bool).
