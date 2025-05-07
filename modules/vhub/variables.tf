@@ -137,6 +137,18 @@ variable "virtual_wan_id" {
   description = "The ID of the virtual WAN."
 }
 
+variable "firewall_deploy" {
+  type        = bool
+  default     = true
+  description = "Controls whether to deploy an Azure Firewall in the Virtual Hub"
+}
+
+variable "firewall_classic_ip_config" {
+  type        = bool
+  default     = false
+  description = "Controls whether to use classic IP configuration for the firewall."
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}

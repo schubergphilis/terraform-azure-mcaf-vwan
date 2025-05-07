@@ -44,7 +44,8 @@ module "vhub" {
   firewall_intrusion_detection_signature_overrides = each.value.firewall_intrusion_detection_signature_overrides
   firewall_intrusion_detection_traffic_bypass      = each.value.firewall_intrusion_detection_traffic_bypass
   firewall_intrusion_detection_tls_certificate     = each.value.firewall_intrusion_detection_tls_certificate
-
+  firewall_deploy                                  = each.value.firewall_deploy
+  firewall_classic_ip_config                       = each.value.firewall_classic_ip_config
 
   tags = var.tags
 }

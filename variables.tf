@@ -38,6 +38,8 @@ variable "virtual_hubs" {
     address_prefix                              = string
     location                                    = string
     routing_intent_name                         = string
+    firewall_deploy                             = optional(bool, true)
+    firewall_classic_ip_config                  = optional(bool, false)
     firewall_name                               = string
     firewall_zones                              = optional(set(string), ["1", "2", "3"])
     firewall_policy_name                        = string
@@ -74,6 +76,8 @@ This variable defines the configuration for virtual hubs, including firewall set
 - location: The Azure region where the virtual hub is deployed (string).
 - address_prefix: The IP address prefix assigned to the virtual hub (string).
 - routing_intent_name: The name of the routing intent associated with the hub (string).
+- firewall_deploy: Whether to deploy an Azure Firewall in the Virtual Hub (optional, defaults to true) (bool).
+- firewall_classic_ip_config: Whether to use classic IP configuration for the firewall (optional, defaults to false) (bool).
 - firewall_name: The name of the Azure Firewall deployed within the virtual hub (string).
 - firewall_zones: Availability zones where the firewall is deployed (set of strings).
 - firewall_policy_name: The name of the firewall policy applied to the firewall (string).

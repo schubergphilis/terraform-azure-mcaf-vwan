@@ -41,6 +41,13 @@ output "vhub_firewall_policy_ids" {
   }
 }
 
+output "vhub_firewall_public_ip_addresses" {
+  description = "Map of public IP addresses of the Firewalls created in each Virtual Hub"
+  value = {
+    for k, v in module.vhub : k => v.firewall_public_ip_addresses if length(v.firewall_public_ip_addresses) > 0
+  }
+}
+
 output "vhub_default_route_table_ids" {
   description = "Map of IDs of the default Route Tables in each Virtual Hub"
   value = {
@@ -68,3 +75,4 @@ output "vhub_address_prefixes" {
     for k, v in module.vhub : k => v.address_prefix
   }
 }
+

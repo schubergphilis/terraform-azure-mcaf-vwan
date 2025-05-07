@@ -35,7 +35,7 @@ resource "azurerm_virtual_wan" "this" {
 }
 
 module "vhub" {
-  source = "../../modules/vhub"
+  source = "../modules/vhub"
 
   for_each = {
     hub1 = {
@@ -51,6 +51,8 @@ module "vhub" {
       firewall_threat_intelligence_mode           = "Alert"
       firewall_dns_proxy_enabled                  = true
       firewall_dns_servers                        = ["8.8.8.8", "8.8.4.4"]
+      firewall_deploy                             = true
+      firewall_classic_ip_config                  = false
       firewall_intrusion_detection_mode           = "Deny"
       firewall_intrusion_detection_private_ranges = ["10.0.0.0/28"]
       firewall_intrusion_detection_signature_overrides = [
