@@ -47,7 +47,7 @@ module "vhub" {
       firewall_zones                              = ["1", "2", "3"]
       firewall_policy_name                        = "example-firewall-policy"
       firewall_sku_tier                           = "Premium"
-      firewall_public_ip_count                    = 1
+      firewall_public_ip_prefix_length            = 30
       firewall_threat_intelligence_mode           = "Alert"
       firewall_dns_proxy_enabled                  = true
       firewall_dns_servers                        = ["8.8.8.8", "8.8.4.4"]
