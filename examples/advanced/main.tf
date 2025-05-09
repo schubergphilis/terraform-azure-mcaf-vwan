@@ -11,7 +11,7 @@ terraform {
 
 provider "azurerm" {
   features {}
-  subscription_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx"
+  subscription_id = "12345678-abcd-1234-efgh-1234567890ab"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -23,7 +23,7 @@ resource "azurerm_resource_group" "this" {
   }
 }
 
-resource "azurerm_ddos_protection_plan" "example" {
+resource "azurerm_network_ddos_protection_plan" "example" {
   name                = "example-ddos-plan"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
