@@ -56,6 +56,8 @@ resource "azurerm_public_ip" "this" {
   sku                 = "Standard"
   zones               = var.firewall_zones
   public_ip_prefix_id = var.firewall_public_ip_prefix_length != null ? azurerm_public_ip_prefix.this[0].id : null
+  ddos_protection_mode     = var.firewall_public_ip_ddos_protection_mode
+  ddos_protection_plan_id  = var.firewall_public_ip_ddos_protection_plan_id
 
   tags = merge(var.tags, { "Resource Type" = "Public IP" })
 }
@@ -77,16 +79,28 @@ resource "azapi_resource" "firewall" {
         name = "AZFW_Hub"
         tier = var.firewall_sku_tier
       }
-      ipConfigurations = [
-        for i, pip in azurerm_public_ip.this : {
-          name = "${var.firewall_name}-pip-${i + 1}"
-          properties = {
-            publicIPAddress = {
-              id = pip.id
+      ipConfigurations = concat(
+        [
+          for i, pip in azurerm_public_ip.this : {
+            name = "${var.firewall_name}-pip-${i + 1}"
+            properties = {
+              publicIPAddress = {
+                id = pip.id
+              }
             }
           }
-        }
-      ]
+        ],
+        [
+          for custom_ip in var.firewall_custom_ip_configurations : {
+            name = custom_ip.name
+            properties = {
+              publicIPAddress = {
+                id = custom_ip.public_ip_address_id
+              }
+            }
+          }
+        ]
+      )
       firewallPolicy = {
         id = azurerm_firewall_policy.this[0].id
       }

@@ -46,11 +46,17 @@ variable "virtual_hubs" {
     firewall_sku_tier                           = string
     firewall_public_ip_count                    = optional(number)
     firewall_public_ip_prefix_length            = optional(number)
+    firewall_public_ip_ddos_protection_mode     = optional(string, "VirtualNetworkInherited")
+    firewall_public_ip_ddos_protection_plan_id  = optional(string)
     firewall_threat_intelligence_mode           = string
     firewall_intrusion_detection_mode           = optional(string, "Alert")
     firewall_dns_proxy_enabled                  = optional(bool, true)
     firewall_dns_servers                        = list(string)
     firewall_intrusion_detection_private_ranges = optional(list(string), [])
+    firewall_custom_ip_configurations = optional(list(object({
+      name = string
+      public_ip_address_id = string
+    })), [])
     firewall_intrusion_detection_signature_overrides = optional(list(object({
       id    = string
       state = string
@@ -85,11 +91,16 @@ This variable defines the configuration for virtual hubs, including firewall set
 - firewall_sku_tier**: The SKU tier of the firewall (e.g., "Standard" or "Premium") (string).
 - firewall_public_ip_count: The number of public IPs allocated to the firewall (optional, either this or firewall_public_ip_prefix_length should be specified) (number).
 - firewall_public_ip_prefix_length: The prefix length for the public IP prefix reservation (optional, either this or firewall_public_ip_count should be specified) (number).
+- firewall_public_ip_ddos_protection_mode: The DDoS protection mode for public IPs (optional, default is "VirtualNetworkInherited") (string).
+- firewall_public_ip_ddos_protection_plan_id: The ID of the DDoS protection plan for public IPs (optional, required if ddos_protection_mode is "Enabled") (string).
 - firewall_threat_intelligence_mode: The mode of threat intelligence for the firewall (string).
 - firewall_intrusion_detection_mode: The mode of intrusion detection (e.g., "Alert" or "Deny") (optional, defaults to "Alert") (string).
 - firewall_dns_proxy_enabled: Indicates whether the DNS proxy is enabled for the firewall (bool).
 - firewall_dns_servers**: A list of DNS servers configured for the firewall (list of strings).
 - firewall_intrusion_detection_private_ranges: A list of private IP ranges for intrusion detection (optional, defaults to an empty list) (list of strings).
+- firewall_custom_ip_configurations: A list of custom IP configurations to add to the firewall (optional, defaults to an empty list).
+  - name: The name of the IP configuration (string).
+  - public_ip_address_id: The ID of the public IP address (string).
 - firewall_intrusion_detection_signature_overrides: A list of firewall intrusion detection signature overrides (optional, defaults to an empty list).
   - id: The signature ID (string).
   - state: The override state for the signature (string).

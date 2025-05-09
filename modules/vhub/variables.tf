@@ -71,9 +71,26 @@ variable "firewall_public_ip_prefix_length" {
   description = "The public ip prefix length that will be requested for the firewall. Required if firewall_public_ip_count is not set."
 
   validation {
-    condition     = var.firewall_public_ip_prefix_length == null || var.firewall_classic_ip_config
-    error_message = "firewall_public_ip_prefix_length can only be used when firewall_classic_ip_config is set to true."
+    condition     = var.firewall_public_ip_prefix_length == null || !var.firewall_classic_ip_config
+    error_message = "firewall_public_ip_prefix_length can only be used when firewall_classic_ip_config is set to false."
   }
+}
+
+variable "firewall_public_ip_ddos_protection_mode" {
+  type        = string
+  default     = "VirtualNetworkInherited"
+  description = "The DDoS protection mode for the public IP. Possible values are Disabled, Enabled, and VirtualNetworkInherited."
+
+  validation {
+    condition     = contains(["Disabled", "Enabled", "VirtualNetworkInherited"], var.firewall_public_ip_ddos_protection_mode)
+    error_message = "The ddos_protection_mode must be one of 'Disabled', 'Enabled', or 'VirtualNetworkInherited'."
+  }
+}
+
+variable "firewall_public_ip_ddos_protection_plan_id" {
+  type        = string
+  default     = null
+  description = "The ID of the DDoS protection plan to be attached to the public IP. Required if ddos_protection_mode is Enabled."
 }
 
 variable "firewall_threat_intelligence_mode" {
@@ -161,8 +178,18 @@ variable "firewall_classic_ip_config" {
   description = "Controls whether to use classic IP configuration for the firewall."
 }
 
+variable "firewall_custom_ip_configurations" {
+  type = list(object({
+    name = string
+    public_ip_address_id = string
+  }))
+  default     = []
+  description = "List of custom IP configurations to add to the firewall. Each object must contain 'name' and 'public_ip_address_id'."
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
   description = "A map of tags to assign to the resource."
 }
+
