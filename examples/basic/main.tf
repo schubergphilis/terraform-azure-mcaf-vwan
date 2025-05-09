@@ -35,15 +35,15 @@ module "vwan" {
 
   virtual_hubs = {
     hub1 = {
-      virtual_hub_name            = "example-virtual-hub"
-      location                    = "eastus"
-      address_prefix              = "10.0.0.0/16"
-      routing_intent_name         = "example-routing-intent"
-      firewall_name               = "example-firewall"
-      firewall_policy_name        = "example-firewall-policy"
-      firewall_sku_tier           = "Standard"
+      virtual_hub_name                  = "example-virtual-hub"
+      location                          = "eastus"
+      address_prefix                    = "10.0.0.0/16"
+      routing_intent_name               = "example-routing-intent"
+      firewall_name                     = "example-firewall"
+      firewall_policy_name              = "example-firewall-policy"
+      firewall_sku_tier                 = "Standard"
       firewall_threat_intelligence_mode = "Alert"
-      firewall_dns_servers        = ["8.8.8.8", "8.8.4.4"]
+      firewall_dns_servers              = ["8.8.8.8", "8.8.4.4"]
       # Optional parameters with defaults:
       # firewall_deploy = true
       # firewall_classic_ip_config = false

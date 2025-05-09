@@ -56,32 +56,32 @@ module "vwan" {
   location            = azurerm_resource_group.this.location
 
   virtual_wan = {
-    name                           = "example-virtual-wan"
-    type                           = "Standard"
-    disable_vpn_encryption         = false
-    allow_branch_to_branch_traffic = true
+    name                              = "example-virtual-wan"
+    type                              = "Standard"
+    disable_vpn_encryption            = false
+    allow_branch_to_branch_traffic    = true
     office365_local_breakout_category = "OptimizeAndAllow"
   }
 
   virtual_hubs = {
     hub1 = {
-      virtual_hub_name            = "example-virtual-hub"
-      location                    = "eastus"
-      address_prefix              = "10.0.0.0/16"
-      routing_intent_name         = "example-routing-intent"
-      firewall_name               = "example-firewall"
-      firewall_zones              = ["1", "2", "3"]
-      firewall_policy_name        = "example-firewall-policy"
-      firewall_sku_tier           = "Premium"
-      firewall_public_ip_ddos_protection_mode = "Enabled"
-      firewall_public_ip_ddos_protection_plan_id = azurerm_ddos_protection_plan.example.id
-      firewall_public_ip_prefix_length = 30
-      firewall_threat_intelligence_mode = "Alert"
-      firewall_dns_proxy_enabled = true
-      firewall_dns_servers       = ["8.8.8.8", "8.8.4.4"]
-      firewall_deploy            = true
-      firewall_classic_ip_config = false
-      firewall_intrusion_detection_mode = "Deny"
+      virtual_hub_name                            = "example-virtual-hub"
+      location                                    = "eastus"
+      address_prefix                              = "10.0.0.0/16"
+      routing_intent_name                         = "example-routing-intent"
+      firewall_name                               = "example-firewall"
+      firewall_zones                              = ["1", "2", "3"]
+      firewall_policy_name                        = "example-firewall-policy"
+      firewall_sku_tier                           = "Premium"
+      firewall_public_ip_ddos_protection_mode     = "Enabled"
+      firewall_public_ip_ddos_protection_plan_id  = azurerm_ddos_protection_plan.example.id
+      firewall_public_ip_prefix_length            = 30
+      firewall_threat_intelligence_mode           = "Alert"
+      firewall_dns_proxy_enabled                  = true
+      firewall_dns_servers                        = ["8.8.8.8", "8.8.4.4"]
+      firewall_deploy                             = true
+      firewall_classic_ip_config                  = false
+      firewall_intrusion_detection_mode           = "Deny"
       firewall_intrusion_detection_private_ranges = ["10.0.0.0/28"]
       firewall_custom_ip_configurations = [
         {
