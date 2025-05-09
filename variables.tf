@@ -49,7 +49,7 @@ variable "virtual_hubs" {
     firewall_public_ip_ddos_protection_mode     = optional(string, "VirtualNetworkInherited")
     firewall_public_ip_ddos_protection_plan_id  = optional(string)
     firewall_threat_intelligence_mode           = string
-    firewall_intrusion_detection_mode           = optional(string, "Alert")
+    firewall_intrusion_detection_mode           = optional(string, "Deny")
     firewall_dns_proxy_enabled                  = optional(bool, true)
     firewall_dns_servers                        = list(string)
     firewall_intrusion_detection_private_ranges = optional(list(string), [])
