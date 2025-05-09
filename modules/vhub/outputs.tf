@@ -1,11 +1,16 @@
 output "firewall_id" {
   description = "The ID of the Firewall within the Virtual Hub."
-  value       = azurerm_firewall.this.id
+  value       = var.firewall_deploy ? local.firewall_id : null
 }
 
 output "firewall_policy_id" {
   description = "The ID of the Firewall Policy within the Virtual Hub."
-  value       = azurerm_firewall_policy.this.id
+  value       = var.firewall_deploy ? azurerm_firewall_policy.this[0].id : null
+}
+
+output "firewall_public_ip_addresses" {
+  description = "The public IP addresses of the Firewall."
+  value       = local.firewall_public_ip_addresses
 }
 
 output "vhub_id" {
@@ -36,4 +41,9 @@ output "virtual_router_ips" {
 output "address_prefix" {
   description = "The Address Prefix used for this Virtual Hub."
   value       = azurerm_virtual_hub.this.address_prefix
+}
+
+output "routing_intent_id" {
+  description = "The ID of the routing intent for this Virtual Hub."
+  value       = var.firewall_deploy ? azurerm_virtual_hub_routing_intent.this[0].id : null
 }

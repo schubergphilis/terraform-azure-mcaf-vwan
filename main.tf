@@ -36,6 +36,9 @@ module "vhub" {
   firewall_policy_name                             = each.value.firewall_policy_name
   firewall_sku_tier                                = each.value.firewall_sku_tier
   firewall_public_ip_count                         = each.value.firewall_public_ip_count
+  firewall_public_ip_prefix_length                 = each.value.firewall_public_ip_prefix_length
+  firewall_public_ip_ddos_protection_mode          = each.value.firewall_public_ip_ddos_protection_mode
+  firewall_public_ip_ddos_protection_plan_id       = each.value.firewall_public_ip_ddos_protection_plan_id
   firewall_threat_intelligence_mode                = each.value.firewall_threat_intelligence_mode
   firewall_intrusion_detection_mode                = each.value.firewall_intrusion_detection_mode
   firewall_dns_proxy_enabled                       = each.value.firewall_dns_proxy_enabled
@@ -44,7 +47,9 @@ module "vhub" {
   firewall_intrusion_detection_signature_overrides = each.value.firewall_intrusion_detection_signature_overrides
   firewall_intrusion_detection_traffic_bypass      = each.value.firewall_intrusion_detection_traffic_bypass
   firewall_intrusion_detection_tls_certificate     = each.value.firewall_intrusion_detection_tls_certificate
-
+  firewall_deploy                                  = each.value.firewall_deploy
+  firewall_classic_ip_config                       = each.value.firewall_classic_ip_config
+  firewall_custom_ip_configurations                = each.value.firewall_custom_ip_configurations
 
   tags = var.tags
 }
