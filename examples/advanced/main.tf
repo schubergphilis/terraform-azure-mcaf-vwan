@@ -42,7 +42,7 @@ resource "azurerm_key_vault" "example" {
   location                    = azurerm_resource_group.this.location
   resource_group_name         = azurerm_resource_group.this.name
   enabled_for_disk_encryption = true
-  tenant_id                   = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  tenant_id                   = "12345678-abcd-4321-efgh-1234567890ab"
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false
 
