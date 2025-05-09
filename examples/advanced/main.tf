@@ -47,6 +47,8 @@ module "vhub" {
       firewall_zones                              = ["1", "2", "3"]
       firewall_policy_name                        = "example-firewall-policy"
       firewall_sku_tier                           = "Premium"
+      firewall_public_ip_ddos_protection_mode     = "Enabled"
+      firewall_public_ip_ddos_protection_plan_id  = "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx/resourceGroups/example-resource-group/providers/Microsoft.Network/ddosProtectionPlans/example-ddos-plan"
       firewall_public_ip_prefix_length            = 30
       firewall_threat_intelligence_mode           = "Alert"
       firewall_dns_proxy_enabled                  = true
@@ -55,6 +57,12 @@ module "vhub" {
       firewall_classic_ip_config                  = false
       firewall_intrusion_detection_mode           = "Deny"
       firewall_intrusion_detection_private_ranges = ["10.0.0.0/28"]
+      firewall_custom_ip_configurations = [
+        {
+          name                 = "CustomIPConfig1"
+          public_ip_address_id = "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx/resourceGroups/example-resource-group/providers/Microsoft.Network/publicIPAddresses/example-public-ip"
+        }
+      ]
       firewall_intrusion_detection_signature_overrides = [
         {
           id    = "2024898"
