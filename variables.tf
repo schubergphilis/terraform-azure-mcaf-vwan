@@ -54,7 +54,7 @@ variable "virtual_hubs" {
     firewall_dns_servers                        = list(string)
     firewall_intrusion_detection_private_ranges = optional(list(string), [])
     firewall_custom_ip_configurations = optional(list(object({
-      name = string
+      name                 = string
       public_ip_address_id = string
     })), [])
     firewall_intrusion_detection_signature_overrides = optional(list(object({

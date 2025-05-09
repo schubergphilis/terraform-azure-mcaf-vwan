@@ -180,7 +180,7 @@ variable "firewall_classic_ip_config" {
 
 variable "firewall_custom_ip_configurations" {
   type = list(object({
-    name = string
+    name                 = string
     public_ip_address_id = string
   }))
   default     = []

@@ -49,15 +49,15 @@ resource "azurerm_public_ip_prefix" "this" {
 resource "azurerm_public_ip" "this" {
   count = var.firewall_deploy && !var.firewall_classic_ip_config ? local.total_ips : 0
 
-  name                = "${var.firewall_name}-pip-${count.index + 1}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  zones               = var.firewall_zones
-  public_ip_prefix_id = var.firewall_public_ip_prefix_length != null ? azurerm_public_ip_prefix.this[0].id : null
-  ddos_protection_mode     = var.firewall_public_ip_ddos_protection_mode
-  ddos_protection_plan_id  = var.firewall_public_ip_ddos_protection_plan_id
+  name                    = "${var.firewall_name}-pip-${count.index + 1}"
+  location                = var.location
+  resource_group_name     = var.resource_group_name
+  allocation_method       = "Static"
+  sku                     = "Standard"
+  zones                   = var.firewall_zones
+  public_ip_prefix_id     = var.firewall_public_ip_prefix_length != null ? azurerm_public_ip_prefix.this[0].id : null
+  ddos_protection_mode    = var.firewall_public_ip_ddos_protection_mode
+  ddos_protection_plan_id = var.firewall_public_ip_ddos_protection_plan_id
 
   tags = merge(var.tags, { "Resource Type" = "Public IP" })
 }
