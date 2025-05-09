@@ -11,8 +11,7 @@ terraform {
 
 provider "azurerm" {
   features {}
-  resource_provider_registrations = "none"
-  subscription_id                 = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx"
+  subscription_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -24,43 +23,70 @@ resource "azurerm_resource_group" "this" {
   }
 }
 
-resource "azurerm_virtual_wan" "this" {
-  name                = "example-virtual-wan"
-  resource_group_name = azurerm_resource_group.this.name
+resource "azurerm_ddos_protection_plan" "example" {
+  name                = "example-ddos-plan"
   location            = azurerm_resource_group.this.location
-  tags = {
-    "Environment"   = "Production"
-    "Resource Type" = "Virtual WAN"
-  }
+  resource_group_name = azurerm_resource_group.this.name
 }
 
-module "vhub" {
-  source = "../modules/vhub"
+resource "azurerm_public_ip" "example" {
+  name                = "example-public-ip"
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
 
-  for_each = {
+resource "azurerm_key_vault" "example" {
+  name                        = "example-kv"
+  location                    = azurerm_resource_group.this.location
+  resource_group_name         = azurerm_resource_group.this.name
+  enabled_for_disk_encryption = true
+  tenant_id                   = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  soft_delete_retention_days  = 7
+  purge_protection_enabled    = false
+
+  sku_name = "standard"
+}
+
+module "vwan" {
+  source = "../../"
+
+  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.this.location
+
+  virtual_wan = {
+    name                           = "example-virtual-wan"
+    type                           = "Standard"
+    disable_vpn_encryption         = false
+    allow_branch_to_branch_traffic = true
+    office365_local_breakout_category = "OptimizeAndAllow"
+  }
+
+  virtual_hubs = {
     hub1 = {
-      virtual_hub_name                            = "example-virtual-hub"
-      location                                    = "eastus"
-      address_prefix                              = "10.0.0.0/16"
-      routing_intent_name                         = "example-routing-intent"
-      firewall_name                               = "example-firewall"
-      firewall_zones                              = ["1", "2", "3"]
-      firewall_policy_name                        = "example-firewall-policy"
-      firewall_sku_tier                           = "Premium"
-      firewall_public_ip_ddos_protection_mode     = "Enabled"
-      firewall_public_ip_ddos_protection_plan_id  = "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx/resourceGroups/example-resource-group/providers/Microsoft.Network/ddosProtectionPlans/example-ddos-plan"
-      firewall_public_ip_prefix_length            = 30
-      firewall_threat_intelligence_mode           = "Alert"
-      firewall_dns_proxy_enabled                  = true
-      firewall_dns_servers                        = ["8.8.8.8", "8.8.4.4"]
-      firewall_deploy                             = true
-      firewall_classic_ip_config                  = false
-      firewall_intrusion_detection_mode           = "Deny"
+      virtual_hub_name            = "example-virtual-hub"
+      location                    = "eastus"
+      address_prefix              = "10.0.0.0/16"
+      routing_intent_name         = "example-routing-intent"
+      firewall_name               = "example-firewall"
+      firewall_zones              = ["1", "2", "3"]
+      firewall_policy_name        = "example-firewall-policy"
+      firewall_sku_tier           = "Premium"
+      firewall_public_ip_ddos_protection_mode = "Enabled"
+      firewall_public_ip_ddos_protection_plan_id = azurerm_ddos_protection_plan.example.id
+      firewall_public_ip_prefix_length = 30
+      firewall_threat_intelligence_mode = "Alert"
+      firewall_dns_proxy_enabled = true
+      firewall_dns_servers       = ["8.8.8.8", "8.8.4.4"]
+      firewall_deploy            = true
+      firewall_classic_ip_config = false
+      firewall_intrusion_detection_mode = "Deny"
       firewall_intrusion_detection_private_ranges = ["10.0.0.0/28"]
       firewall_custom_ip_configurations = [
         {
           name                 = "CustomIPConfig1"
-          public_ip_address_id = "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx/resourceGroups/example-resource-group/providers/Microsoft.Network/publicIPAddresses/example-public-ip"
+          public_ip_address_id = azurerm_public_ip.example.id
         }
       ]
       firewall_intrusion_detection_signature_overrides = [
@@ -73,48 +99,39 @@ module "vhub" {
         {
           name                  = "SecretBypass"
           protocol              = "TCP"
-          description           = "SecretBypass"
+          description           = "Example bypass rule"
           source_addresses      = ["*"]
           destination_addresses = ["*"]
           destination_ports     = ["443"]
-      }]
-      firewall_intrusion_detection_tls_certificate = {
-        key_vault_secret_id = "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx/resourceGroups/example-resource-group/providers/Microsoft.KeyVault/vaults/example-kv"
-        name                = "certname"
-      }
-      hub_bgp_peers = {
-        peer1 = {
-          virtual_hub_id     = "example-virtual-hub-id"
-          name               = "example-peer"
-          peer_asn           = 65001
-          peer_ip            = "10.0.1.1"
-          vnet_connection_id = "example-vnet-id"
         }
+      ]
+      firewall_intrusion_detection_tls_certificate = {
+        key_vault_secret_id = "${azurerm_key_vault.example.id}/secrets/example-cert"
+        name                = "certname"
       }
     }
   }
-  virtual_hubs        = each.value
-  virtual_wan_id      = azurerm_virtual_wan.this.id
-  resource_group_name = azurerm_resource_group.this.name
+
+  hub_bgp_peers = {
+    # In a real environment, you would use actual IDs like:
+    # peer1 = {
+    #   virtual_hub_id     = module.vwan.virtual_hub_ids["hub1"]
+    #   name               = "example-peer"
+    #   peer_asn           = 65001
+    #   peer_ip            = "10.0.1.1"
+    #   vnet_connection_id = azurerm_virtual_hub_connection.example.id
+    # }
+  }
+
   tags = {
     "Environment"   = "Production"
-    "Resource Type" = "Virtual Hub"
+    "Resource Type" = "Virtual WAN"
   }
 }
 
-resource "azurerm_virtual_hub_bgp_connection" "this" {
-  for_each = {
-    peer1 = {
-      virtual_hub_id     = "example-virtual-hub-id"
-      name               = "example-peer"
-      peer_asn           = 65001
-      peer_ip            = "10.0.1.1"
-      vnet_connection_id = "example-vnet-id"
-    }
-  }
-  virtual_hub_id                = each.value.virtual_hub_id
-  name                          = each.value.name
-  peer_asn                      = each.value.peer_asn
-  peer_ip                       = each.value.peer_ip
-  virtual_network_connection_id = each.value.vnet_connection_id
-}
+# Example of how you would create a Virtual Hub connection in a real environment
+# resource "azurerm_virtual_hub_connection" "example" {
+#   name                      = "example-hub-connection"
+#   virtual_hub_id            = module.vwan.virtual_hub_ids["hub1"]
+#   remote_virtual_network_id = azurerm_virtual_network.example.id
+# }
