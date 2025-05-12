@@ -57,11 +57,40 @@ variable "firewall_sku_tier" {
 
 variable "firewall_public_ip_count" {
   type        = number
-  description = "The number of public IPs allocated to the firewall."
+  default     = null
+  description = "The number of public IPs allocated to the firewall. Required if firewall_public_ip_prefix_id is not set."
+  # validation {
+  #   condition     = var.firewall_public_ip_count == null || (var.firewall_public_ip_count >= 1 && var.firewall_public_ip_count <= 10)
+  #   error_message = "firewall_public_ip_count must be between 1 and 10."
+  # }
+}
+
+variable "firewall_public_ip_prefix_length" {
+  type        = number
+  default     = null
+  description = "The public ip prefix length that will be requested for the firewall. Required if firewall_public_ip_count is not set."
+
   validation {
-    condition     = var.firewall_public_ip_count >= 1 && var.firewall_public_ip_count <= 3
-    error_message = "firewall_public_ip_count must be between 1 and 3."
+    condition     = var.firewall_public_ip_prefix_length == null || !var.firewall_classic_ip_config
+    error_message = "firewall_public_ip_prefix_length can only be used when firewall_classic_ip_config is set to false."
   }
+}
+
+variable "firewall_public_ip_ddos_protection_mode" {
+  type        = string
+  default     = "VirtualNetworkInherited"
+  description = "The DDoS protection mode for the public IP. Possible values are Disabled, Enabled, and VirtualNetworkInherited."
+
+  validation {
+    condition     = contains(["Disabled", "Enabled", "VirtualNetworkInherited"], var.firewall_public_ip_ddos_protection_mode)
+    error_message = "The ddos_protection_mode must be one of 'Disabled', 'Enabled', or 'VirtualNetworkInherited'."
+  }
+}
+
+variable "firewall_public_ip_ddos_protection_plan_id" {
+  type        = string
+  default     = null
+  description = "The ID of the DDoS protection plan to be attached to the public IP. Required if ddos_protection_mode is Enabled."
 }
 
 variable "firewall_threat_intelligence_mode" {
@@ -137,8 +166,30 @@ variable "virtual_wan_id" {
   description = "The ID of the virtual WAN."
 }
 
+variable "firewall_deploy" {
+  type        = bool
+  default     = true
+  description = "Controls whether to deploy an Azure Firewall in the Virtual Hub"
+}
+
+variable "firewall_classic_ip_config" {
+  type        = bool
+  default     = false
+  description = "Controls whether to use classic IP configuration for the firewall."
+}
+
+variable "firewall_custom_ip_configurations" {
+  type = list(object({
+    name                 = string
+    public_ip_address_id = string
+  }))
+  default     = []
+  description = "List of custom IP configurations to add to the firewall. Each object must contain 'name' and 'public_ip_address_id'."
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
   description = "A map of tags to assign to the resource."
 }
+
