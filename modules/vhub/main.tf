@@ -40,7 +40,7 @@ resource "azurerm_public_ip_prefix" "this" {
   name                = "${var.firewall_name}-pip-prefix"
   location            = var.location
   resource_group_name = var.resource_group_name
-  zones               = var.zones
+  zones               = var.firewall_zones
 
   prefix_length = var.firewall_public_ip_prefix_length
 
